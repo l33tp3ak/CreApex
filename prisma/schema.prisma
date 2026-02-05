@@ -273,8 +273,6 @@ enum Weight {
 
 
 
-//Must do tasks, invoices, etc
-
 //----------------------------------------------------------------------------------------------------------------
 /*
 For an invoice, we need to calculate:
@@ -407,6 +405,7 @@ model Request {
 
 //Optional 1:n
 //This is optional as it is possible a buyer may not have an account when they are commissioning an item
+//Additionally, a user may not have an address set up or does not wish to have an address setup
 	requestor							User?			@relation(fields: [requestorID], references: [user_ID])
 	requestorID						String?
 
@@ -420,11 +419,6 @@ model Request {
 Composite Primary Key to help represent what the ID is
 Allows an easy counting and generation of the ID without it being a meaningless assemblage of letters and numbers
 Primary Key is composed of an autoincremented number and the string representing the Work Order in ITIL (WO)
-It should also have as many 0s as possible
-Material could be contained in the WO and the color in the task?
-Or maybe the task simply has the MaterialColour as a relation?
-
-????
 */
 model WorkOrder {
 	work_order_ID_string		ITILTicketType		@default(WO)
