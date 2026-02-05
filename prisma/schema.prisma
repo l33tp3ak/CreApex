@@ -1,0 +1,469 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+	user_ID							String					@id @default(uuid())
+	username							String					@unique
+	email								String					@unique
+	password							String
+	createdAt						DateTime				@default(now())
+	updatedAt						DateTime				@default(now())
+	role								Role					@default(USER)
+	
+//Relations
+//1:n
+//Language to be used for the interface, there can only be only one language used at a time
+//Extracted from the browser upon user creation, otherwise extracted from the OS, if possible
+//We need to name the relation because there can be more than one relation on the same model
+//Every relation to a model with multiple relations MUST be named, especially if a model has multiple N:1 relations to the same model
+//The name of the relation is enclosed within "", here "UserDisplayLanguage"
+	displayLanguage					Language				@relation("UserDisplayLanguage", fields: [languageID], references: [language_ID])
+	languageID						String
+
+//M:n
+//Address Book of the user
+//Default Address extracted from the browser upon user creation, otherwise extracted from the OS, if possible
+	addressBook						AddressBook[]
+
+//1:n
+//Presently selected default address to use when doing an order
+	defaultAddress					Address?		@relation("UserDefaultAddress", fields: [defaultAddressID], references: [address_ID])
+	defaultAddressID				String?
+
+
+//n:1
+//Purchase/Commission Requests made by the user
+	purchases							Request[]	
+
+	modele3DUploaded				Modele3D[]	
+}
+
+
+enum Role {
+	USER
+	ADMIN
+}
+
+
+
+
+//Used for tax and payment purposes
+model Address {
+	address_ID						String					@id @default(uuid())
+	streetNumber					Int
+	streetName						String						
+	postalCode						String
+	
+//Relations
+//1:n
+//Country of the address
+	addressCountry					Country				@relation(fields: [countryID], references: [country_ID])
+	countryID						Int
+
+//1:n
+//Province / State / Region of the address
+	region								ProvinceState		@relation(fields: [regionID], references: [region_ID])
+	regionID							Int
+
+	defaultAddresses				User[]					@relation("UserDefaultAddress")
+
+//m:n
+//Address book containing which user has which addresses
+	addressBook						AddressBook[]
+
+//1:n
+//Default address of the user
+
+
+//1:n
+//Addresses defined on the Invoice
+	shippingAddress					Invoice[]				@relation("ShippingAddress")
+	billingAddress					Invoice[]				@relation("BillingAddress")
+}
+
+
+//Joining table
+model AddressBook {
+	addresses							Address				@relation(fields: [addressesID], references: [address_ID])
+	addressesID						String					//relation scalar field (used in the "@relation" attribute above)
+	users								User					@relation(fields: [usersID], references: [user_ID])
+	usersID							String
+
+//manually sets the ID to be 2 fields
+	@@id([addressesID, usersID])
+}
+
+
+
+//Used for tax and payment purposes
+model Country {
+	country_ID						Int					@id @default(autoincrement())
+	name								String					@unique
+
+//Relations
+//1:n
+//Currency of the country
+	currency							Currency				@relation(fields: [currencyID], references: [currency_ID])
+	currencyID						Int
+
+//n:1
+	regions							ProvinceState[]
+
+//n:1
+	AD								Address[]
+}
+
+model ProvinceState {
+	region_ID						Int					@id @default(autoincrement())
+	name								String	
+
+//Relations
+//1:n
+	country							Country				@relation(fields: [countryID], references: [country_ID])
+	countryID						Int
+
+//n:1
+	AD								Address[]
+}
+
+
+
+//Used for determining the language of the page, is a shorthand to obtain the value
+//Should also follow a format to be auto-translated by the Google Translate/DeepL API or smt
+//Alternatively, we can have the pages manually translated if we want. 
+//Ultimately, it doesn't matter, as this is only used to either extract the correct information for the pages internally or send to which language to translate to for the API
+
+/*
+En ayant l'ID comme String, on peut entreposer une valeur d'identifiant pour traduction sans avoir un champ additionel
+Par exemple, "en_GB" peut etre utiliser et peut representer un parametre dans l'API externe
+*/
+model Language {
+	language_ID						String					@id
+	name								String					@unique
+	
+//Relations
+//As this is a 1:N relationship, this side of the relation uses a list which CAN be empty, as a language can have 0 users
+//Here, we have a named relation, "UserDisplayLanguage", for example purposes
+	usersOfLanguage				User[]					@relation("UserDisplayLanguage")
+}
+
+
+
+//Hopefully possible to use for currency conversion through an API?
+//Some examples could be USD, CAD, EURO..?
+//Depends on the requirements of the API
+model Currency {
+	currency_ID					Int					@id @default(autoincrement())
+	name								String					@unique
+
+//Relations
+//n:1
+	countries							Country[]
+//n:1
+	
+}
+
+
+
+
+
+
+
+
+//----------------------------------------------------------------------------------------------------------------
+
+
+
+/*
+The database itself SHOULD NEVER contain the 3d model's files, as they can be several Mbs or even Gbs (if they are complex and badly created enough)
+They should be a link to the path of the model
+*/
+model Modele3D {
+	modele_3d_ID					String					@id @default(uuid())
+	name								String
+	path								String
+	netVolume						Float
+
+//Relations
+//1:n
+//User who uploaded the model
+	uploader							User?					@relation(fields: [uploaderID], references: [user_ID])
+	uploaderID						String?
+
+//Relations
+	WOs								WorkOrder[]
+}
+
+
+
+
+
+
+//----------------------------------------------------------------------------------------------------------------
+model Material {
+	material_ID						Int					@id @default(autoincrement())
+	name								String					@unique
+	
+	createdAt						DateTime			@default(now())
+	updatedAt						DateTime			@default(now())
+// Unit of weight used for this material
+	weightUnit						Weight			@default(Gram)
+	
+// Relations
+// M:n
+// Colours available for this material
+	colour								MaterialColour[]
+}
+
+model Colour {
+	colour_ID						Int					@id @default(autoincrement())
+	name								String					@unique
+// M:n
+// Materials this colour is available for
+	material							MaterialColour[]
+}
+
+//Joining table
+
+/*
+Pour faire une référence à une table de jointure dans une autre table
+Il faut avoir les 2(+) clefs composant la clé primaire comme clefs étrangères
+Chaque clef doit être référencé dans le même orde que les clés sont référencé dans la table de jointure.
+*/
+model MaterialColour {
+	material							Material				@relation(fields: [materialID], references: [material_ID])
+	materialID						Int					//relation scalar field (used in the "@relation" attribute above)
+	colour								Colour					@relation(fields: [colourID], references: [colour_ID])
+	colourID							Int
+
+	quantityAvailable				Float					//Each colour of each material has it's own quantity available, which represents in the inventory the amount available in the defined weightUnit
+	priceByWeight					Decimal
+
+//manually sets the ID to be 2 fields
+	@@id([materialID, colourID])
+
+//Relations
+//n:1
+	creationTasks					Task[]
+}
+
+
+enum Weight {
+	KG
+	Gram										
+}
+
+
+
+
+
+
+
+
+
+//Must do tasks, invoices, etc
+
+//----------------------------------------------------------------------------------------------------------------
+/*
+For an invoice, we need to calculate:
+(volume/weight of the model   /   weight unit of the Material)   *   priceByWeight + taxes  + 30% RESERVATION FEE
+
+If they do NOT login, then we must ask them the address, thus we cannot rely upon the request or the logged in user for the address
+
+If they ARE logged in, then we can extract the information that way
+*/
+model Invoice {
+	invoice_ID						Int					@id @default(autoincrement())
+	
+//Relations
+//1:1
+/*
+Although this is a 1:1 relationship, it is a FULL junction, I think
+Through it, we get the User who made the commission, if any
+Through the user we can get their address, through the address, the country
+*/
+	purchase							Request					@relation(fields: [purchaseRqStringID, purchaseRqNumberID], references: [request_ID_string, request_ID_number])
+	purchaseRqStringID			ITILTicketType		@default(REQ)
+	purchaseRqNumberID			Int
+//A one-to-one relationship REQUIRES all fields be unique, thus the following is MANDATORY!!!!!!!!
+	@@unique([purchaseRqStringID, purchaseRqNumberID])
+
+
+//1:n
+//Address for billing
+//Through the Address we get the Country, through the country, the Currency
+	billingAddress					Address					@relation("BillingAddress", fields: [billingAddressID], references: [address_ID])
+	billingAddressID				String
+
+//1:n
+//Address for SHIPPING
+//Through the Address we get the Country, through the country, the Currency
+//Optional, as the default is the same as the billing address
+	shippingAddress					Address?					@relation("ShippingAddress", fields: [shippingAddressID], references: [address_ID])
+	shippingAddressID				String?
+	
+
+	totalBeforeTaxes				Decimal
+	taxes								Decimal
+	totalAfterTaxes				Decimal
+	reservationFee					Decimal
+	totalAfterFee					Decimal
+}
+
+
+
+
+
+
+
+//----------------------------------------------------------------------------------------------------------------
+/*
+general hierarchy:
+- Request:
+Order containing all models to print and ship
+
+- Work Order:
+Printing/shipping of an individual model, contains the quantity of times the model must be printed
+
+- Tasks:
+Fulfillment of the printing for the individual times a model from a Work Order  needs to be printed
+*/
+
+
+
+
+
+//Following the ITIL standard for ease of representation and greater simplicity
+//Represents every purchase and commission being REQUESTED to be fulfilled
+//REQ000000001
+
+enum ITILTicketType {
+	INV
+	INC
+	REQ
+	WO
+	TAS
+	CHA
+}
+
+enum ITILTicketStatus {
+	NEW								@map("New")
+	ASSIGNED						@map("Assigned")
+	IN_PROGRESS					@map("In Progress")
+	PENDING						@map("Pending")
+	RESOLVED						@map("Resolved")
+	CLOSED							@map("Closed")
+	CANCELLED						@map("Cancelled")
+}
+
+
+/*
+Quand on crée la requête dans le backend, il faut combiner un chiffre avec le String identifiant les requete (REQ)
+
+
+const dernier = await prisma.request.findFirst({
+	orderBy: {
+		id: 'desc'
+	},
+	select: {
+		request_ID: true
+	}
+});
+
+//make the next reference number, corresponding to the next ID
+//Permet de le creer sans avoir d'id
+const nextId = (dernier?.request_ID ?? 0) +1
+
+const reference = `REQ${nextId.toString().padStart(8,"0")}`
+prisma.request.create(
+	data: {
+		ref: reference
+	}
+)
+
+*/
+model Request {
+	request_ID_string				ITILTicketType		@default(REQ)
+	request_ID_number			Int						@default(autoincrement()) @unique
+//Defines the ID to be multiple fields, making it possible to have an autoincrement with a specific string
+	@@id(name: "req_ref", [request_ID_string, request_ID_number])
+	
+
+//Relations
+//n:1
+	wosBeingFulfilled				WorkOrder[]
+
+//Optional 1:n
+//This is optional as it is possible a buyer may not have an account when they are commissioning an item
+	requestor							User?			@relation(fields: [requestorID], references: [user_ID])
+	requestorID						String?
+
+//1:1
+//In a one-to-one relation, the side of the relation without a foreign key MUST be optional
+	bill								Invoice?
+}
+
+
+/*
+Composite Primary Key to help represent what the ID is
+Allows an easy counting and generation of the ID without it being a meaningless assemblage of letters and numbers
+Primary Key is composed of an autoincremented number and the string representing the Work Order in ITIL (WO)
+It should also have as many 0s as possible
+Material could be contained in the WO and the color in the task?
+Or maybe the task simply has the MaterialColour as a relation?
+
+????
+*/
+model WorkOrder {
+	work_order_ID_string		ITILTicketType		@default(WO)
+	work_order_ID_number		Int						@default(autoincrement()) @unique
+//Defines the ID to be multiple fields, making it possible to have an autoincrement with a specific string
+	@@id(name: "wo_ref", [work_order_ID_string, work_order_ID_number])
+
+	
+	quantity							Int
+	
+//Relations
+//1:n
+	orderedModel					Modele3D				@relation(fields: [modelID], references: [modele_3d_ID])
+	modelID							String
+
+//1:n
+//Multi-Field Foreign Key to the parent Request
+	parentRequest					Request					@relation(fields: [rqStringID, rqNumberID], references: [request_ID_string, request_ID_number])
+	rqStringID						ITILTicketType		@default(REQ)
+	rqNumberID						Int
+
+//n:1
+	tasksBeingFulfilled				Task[]
+}
+
+
+model Task {
+	task_ID_string					ITILTicketType		@default(TAS)
+	task_ID_number				Int						@default(autoincrement()) @unique
+//Defines the ID to be multiple fields, making it possible to have an autoincrement with a specific string
+	@@id(name: "tas_ref", [task_ID_string, task_ID_number])
+
+	
+//Relations
+	selectedMaterialColor			MaterialColour			@relation(fields: [selectedMaterial, selectedColour], references: [materialID,colourID])
+	selectedMaterial				Int
+	selectedColour					Int
+
+	parentWorkOrder				WorkOrder				@relation(fields: [woStringID, woNumberID], references: [work_order_ID_string, work_order_ID_number])
+	woStringID						ITILTicketType		@default(WO)
+	woNumberID					Int
+}
