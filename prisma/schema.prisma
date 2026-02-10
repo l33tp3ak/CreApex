@@ -5,21 +5,26 @@
 // Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
 
 generator client {
-  provider = "prisma-client"
-  output   = "../src/generated/prisma"
+	provider = "prisma-client"
+	output   = "../src/generated/prisma"
 }
 
 datasource db {
-  provider = "postgresql"
+	provider = "postgresql"
 }
 
 model User {
 	user_ID							String					@id @default(uuid())
+	stackAuthId						String					@unique // ID de Stack Auth
+	name								String?
+	avatar								String?
 	username							String					@unique
 	email								String					@unique
 	password							String
 	createdAt						DateTime				@default(now())
-	updatedAt						DateTime				@default(now())
+	updatedAt						DateTime				@updatedAt
+//updated through a function at login
+	lastLogin							DateTime	
 	role								Role					@default(USER)
 	
 //Relations
@@ -47,7 +52,10 @@ model User {
 //Purchase/Commission Requests made by the user
 	purchases							Request[]	
 
-	modele3DUploaded				Modele3D[]	
+	modele3DUploaded				Modele3D[]
+
+	
+	usersCart							Cart[]
 }
 
 
@@ -204,6 +212,8 @@ model Modele3D {
 
 //Relations
 	WOs								WorkOrder[]
+
+	cartItems						Cart[]
 }
 
 
@@ -219,12 +229,16 @@ model Material {
 	createdAt						DateTime			@default(now())
 	updatedAt						DateTime			@default(now())
 // Unit of weight used for this material
-	weightUnit						Weight			@default(Gram)
+	weightUnit						Weight			@default(GRAM)
 	
 // Relations
 // M:n
 // Colours available for this material
 	colour								MaterialColour[]
+
+
+
+	cartItems						Cart[]
 }
 
 model Colour {
@@ -233,6 +247,10 @@ model Colour {
 // M:n
 // Materials this colour is available for
 	material							MaterialColour[]
+
+
+
+	cartItems						Cart[]
 }
 
 //Joining table
@@ -262,7 +280,7 @@ model MaterialColour {
 
 enum Weight {
 	KG
-	Gram										
+	GRAM										
 }
 
 
@@ -283,7 +301,11 @@ If they do NOT login, then we must ask them the address, thus we cannot rely upo
 If they ARE logged in, then we can extract the information that way
 */
 model Invoice {
-	invoice_ID						Int					@id @default(autoincrement())
+	invoice_ID_string				ITILTicketType		@default(INV)
+	invoice_ID_number			Int						@default(autoincrement()) @unique
+//Defines the ID to be multiple fields, making it possible to have an autoincrement with a specific string
+	@@id(name: "inv_ref", [invoice_ID_string, invoice_ID_number])
+
 	
 //Relations
 //1:1
@@ -302,6 +324,13 @@ Through the user we can get their address, through the address, the country
 //1:n
 //Address for billing
 //Through the Address we get the Country, through the country, the Currency
+/*
+The address is either extracted from the user's selected address or from the "Enter Address" Form.
+Afterwards, it is stored on the Address table, with the foreign keys corresponding to the selected value for the corresponding table.
+
+Example:
+User selects Canada, the Foreign Key corresponding to Canada is entered as the value
+*/
 	billingAddress					Address					@relation("BillingAddress", fields: [billingAddressID], references: [address_ID])
 	billingAddressID				String
 
@@ -320,6 +349,34 @@ Through the user we can get their address, through the address, the country
 	totalAfterFee					Decimal
 }
 
+
+/*
+Joining table that temporarily holds the information of the order of the user, in a manner that is more permanent than through cookies
+Once an order is completed, the function should call a delete to this table for all of the entries with the user's ID (user_ID)
+The checkout function should also retrieve all of the missing info necessary for shipping and archiving
+Only users with an existing account are stored on the Table, otherwise the info is stored in temporary cookies which are deleted upon checkout.
+
+If a user does not login for a month, their cart is emptied (all of their entries on the table are DELETED).
+
+
+***TODO***
+Create bookmarks/favourites/thinking of purchasing?, allowing us to save the models inside of the cart for the user without forever having info on this table
+*/
+model Cart {
+	cartOwner						User				@relation(fields: [cartOwnerID], references: [user_ID])
+	cartOwnerID					String				//relation scalar field (used in the "@relation" attribute above)
+	orderedModel					Modele3D		@relation(fields: [orderedModelID], references: [modele_3d_ID])
+	orderedModelID				String
+	orderedMaterial				Material			@relation(fields: [orderedMaterialID], references: [material_ID])
+	orderedMaterialID				Int
+	orderedColour					Colour				@relation(fields: [orderedColourID], references: [colour_ID])
+	orderedColourID				Int
+
+	quantityOrdered				Int
+
+//manually sets the ID to be several fields
+	@@id([cartOwnerID, orderedModelID, orderedMaterialID, orderedColourID])
+}
 
 
 
@@ -360,8 +417,11 @@ enum ITILTicketStatus {
 	NEW								@map("New")
 	ASSIGNED						@map("Assigned")
 	IN_PROGRESS					@map("In Progress")
+	IN_REVIEW					@map("In Review")
+	APPROVED						@map("Approved")
 	PENDING						@map("Pending")
 	RESOLVED						@map("Resolved")
+	REJECTED						@map("Rejected")
 	CLOSED							@map("Closed")
 	CANCELLED						@map("Cancelled")
 }
@@ -397,17 +457,23 @@ model Request {
 	request_ID_number			Int						@default(autoincrement()) @unique
 //Defines the ID to be multiple fields, making it possible to have an autoincrement with a specific string
 	@@id(name: "req_ref", [request_ID_string, request_ID_number])
+
+//Sent on checkout, not on the cart
+	userMessage						String?
 	
 
 //Relations
 //n:1
+//Created on checkout for every model
 	wosBeingFulfilled				WorkOrder[]
 
 //Optional 1:n
 //This is optional as it is possible a buyer may not have an account when they are commissioning an item
 //Additionally, a user may not have an address set up or does not wish to have an address setup
-	requestor							User?			@relation(fields: [requestorID], references: [user_ID])
+	requestor							User?						@relation(fields: [requestorID], references: [user_ID])
 	requestorID						String?
+
+	status								ITILTicketStatus		@default(NEW)
 
 //1:1
 //In a one-to-one relation, the side of the relation without a foreign key MUST be optional
@@ -440,6 +506,8 @@ model WorkOrder {
 	rqStringID						ITILTicketType		@default(REQ)
 	rqNumberID						Int
 
+	status								ITILTicketStatus		@ default(NEW)
+
 //n:1
 	tasksBeingFulfilled				Task[]
 }
@@ -460,4 +528,6 @@ model Task {
 	parentWorkOrder				WorkOrder				@relation(fields: [woStringID, woNumberID], references: [work_order_ID_string, work_order_ID_number])
 	woStringID						ITILTicketType		@default(WO)
 	woNumberID					Int
+
+	status								ITILTicketStatus		@ default(NEW)
 }
