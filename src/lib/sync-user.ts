@@ -11,6 +11,13 @@ export async function syncUserWithDatabase() {
 	if (!user) {
 		return null;
 	}
+	
+	const stackAuthId = user.id;
+	const email = user.primaryEmail;
+	const name = user.displayName;
+	const avatar = user.profileImageUrl;
+	
+	
 
 	const notreUser = await prisma.user.upsert({
 		where: {stackAuthId: user.id},
@@ -20,8 +27,8 @@ export async function syncUserWithDatabase() {
 			avatar: user.profileImageUrl || "",
 		},
 		create: {
-			stackAuthId: user.id,
-			email: user.primaryEmail || "",
+			stackAuthId: stackAuthId,
+			email: email || "",
 			name: user.displayName || "",
 			avatar: user.profileImageUrl || "",
 		}

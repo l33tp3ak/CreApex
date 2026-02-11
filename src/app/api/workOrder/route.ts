@@ -29,13 +29,19 @@ export async function POST(req: NextRequest) {
 	const body = await req.json();
 	//MUST declare the constants representing the properties that will be sent
 	const {quantity, modelID, rqNumberID} = body;
+	
+	
+	let newWO;
+	try {
+		newWO = await prisma.workOrder.create({
+			data: {quantity, modelID, rqNumberID}
+		});
+	} catch (exception) {
+		return ("An error has occured: " + exception);
+	}
 
-	const newNote = await prisma.workOrder.create({
-		data: { quantity, modelID, rqNumberID}
-	});
 
-
-	return NextResponse.json(newNote, {status: 201});
+	return NextResponse.json(newWO, {status: 201});
 }
 
 
@@ -47,14 +53,22 @@ export async function PATCH(req: NextRequest) {
 	//Extract from the body of the request
 	const body = await req.json();
 	//MUST declare the constants representing the properties that will be sent
-	const {quantity, modelID, rqNumberID} = body;
+	const {quantity, modelID, rqNumberID, status, work_order_ID_number} = body;
 
-	const newNote = await prisma.workOrder.create({
-		data: { quantity, modelID, rqNumberID}
-	});
-	
-	
+	let newWO;
+
+	try {
+		newWO = await prisma.workOrder.update({
+			where: {work_order_ID_number: work_order_ID_number},
+			data: {quantity, modelID, rqNumberID, status}
+		});
+	} catch (e) {
+		return ("An error has occured: " + e);
+	}
 
 
-	return NextResponse.json(newNote, {status: 201});
+
+
+
+	return NextResponse.json(newWO, {status: 201});
 }

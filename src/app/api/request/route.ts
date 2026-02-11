@@ -15,13 +15,13 @@ import {ITILTicketType, Request} from "@/generated/prisma/client";
 
 export async function GET() {
 	//Get all the data from the Note table in the database in the JSON format
-	const notes = await prisma.request.findMany();
-	return NextResponse.json(notes);
+	const requests = await prisma.request.findMany();
+	return NextResponse.json(requests);
 }
 
 
 export async function findRequestById(id: number) {
-	
+
 	let rq;
 
 
@@ -34,6 +34,7 @@ export async function findRequestById(id: number) {
 		});
 	} catch (e) {
 		console.log("Request not found: " + e);
+		return ("Request not found: " + e);
 	}
 
 	return NextResponse.json(rq);
@@ -50,12 +51,21 @@ export async function POST(req: NextRequest) {
 	//MUST declare the constants representing the properties that will be sent
 	const {userMessage, requestorID} = body;
 
-	const newNote = await prisma.request.create({
-		data: {userMessage, requestorID}
-	});
+	let newRequest;
+
+	try {
+		newRequest = await prisma.request.create({
+			data: {userMessage, requestorID}
+		});
+	} catch (e) {
+		console.log("An error has occured: " + e);
+		return ("An error has occured: " + e);
+
+	}
 
 
-	return NextResponse.json(newNote, {status: 201});
+
+	return NextResponse.json(newRequest, {status: 201});
 }
 
 
@@ -67,17 +77,30 @@ export async function PATCH(req: NextRequest) {
 	//Extract from the body of the request
 	const body = await req.json();
 	//MUST declare the constants representing the properties that will be sent
-	const {userMessage, requestorID} = body;
+	const {userMessage, requestorID, request_ID_number, status} = body;
 
-	const newNote = await prisma.request.create({
-		data: {quantity, modelID, rqStringID, rqNumberID}
-	});
-	
-	await prisma.game.update({
-		where: {id: gameId},
-		data,
-	})
+	let rq;
+
+	try {
+		rq = await prisma.request.update({
+			where: {request_ID_number},
+			data: {userMessage, requestorID, status}
+		});
+
+	} catch (e) {
+		console.log("An error has occured: " + e);
+		return ("An error has occured: " + e);
+
+	}
 
 
-	return NextResponse.json(newNote, {status: 201});
+
+	return NextResponse.json(rq, {status: 201});
 }
+
+
+/*
+For bookkeeping reason, we do not delete requests outright, we cancel them.
+
+Since we don't delete them, we don't need the DELETE of crud
+*/

@@ -14,19 +14,55 @@ import {NextRequest, NextResponse} from "next/server";
 
 export async function GET() {
 	//Get all the data from the Note table in the database
-	const notes = await prisma.note.findMany();
+	const notes = await prisma.provinceState.findMany();
 	return NextResponse.json(notes);
 }
 
 export async function POST(req: NextRequest) {
 	//Extract from the body of the request
 	const body = await req.json();
-	const {title, content} = body;
+	const {name, countryID} = body;
 
-	const newNote = await prisma.note.create({
-		data: {title, content}
+	const newProvince = await prisma.provinceState.create({
+		data: {name, countryID}
 	});
 
 
-	return NextResponse.json(newNote, {status: 201});
+	return NextResponse.json(newProvince, {status: 201});
+}
+
+
+
+export async function PATCH(req: NextRequest) {
+	//Extract from the body of the request
+	const body = await req.json();
+	const {name, countryID, region_ID} = body;
+
+	const newProvince = await prisma.provinceState.update({
+		where: {region_ID},
+		data: {name, countryID}
+	});
+
+
+	return NextResponse.json(newProvince, {status: 201});
+}
+
+
+
+
+
+
+export async function DELETE(req: NextRequest) {
+	//Extract from the body of the request
+	const body = await req.json();
+	const {region_ID} = body;
+
+	const provinceToDelete = await prisma.provinceState.delete({
+		where: {
+			region_ID: region_ID
+		}
+	});
+
+
+	return NextResponse.json(provinceToDelete, {status: 201});
 }

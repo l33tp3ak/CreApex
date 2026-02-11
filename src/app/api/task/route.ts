@@ -14,19 +14,54 @@ import {NextRequest, NextResponse} from "next/server";
 
 export async function GET() {
 	//Get all the data from the Note table in the database
-	const notes = await prisma.note.findMany();
-	return NextResponse.json(notes);
+	const tasks = await prisma.task.findMany();
+	return NextResponse.json(tasks);
 }
 
 export async function POST(req: NextRequest) {
 	//Extract from the body of the request
 	const body = await req.json();
-	const {title, content} = body;
-
-	const newNote = await prisma.note.create({
-		data: {title, content}
-	});
+	const {woNumberID, selectedMaterial, selectedColour} = body;
+	let newTask;
 
 
-	return NextResponse.json(newNote, {status: 201});
+	try {
+		newTask = await prisma.task.create({
+			data: {woNumberID, selectedMaterial, selectedColour}
+		});
+	} catch (e) {
+		console.log("An error has occured: " + e);
+		return ("An error has occured: " + e);
+
+	}
+
+	return NextResponse.json(newTask, {status: 201});
+}
+
+
+
+export async function PATCH(req: NextRequest) {
+	//Extract from the body of the request
+	const body = await req.json();
+	//MUST declare the constants representing the properties that will be sent
+	const {task_ID_number, selectedMaterial, selectedColour, status} = body;
+
+
+	let newWO;
+
+	try {
+		newWO = await prisma.task.update({
+			where: {task_ID_number},
+			data: {selectedMaterial, selectedColour, status}
+		});
+	} catch (e) {
+		console.log("An error has occured: " + e);
+		return ("An error has occured: " + e);
+
+	}
+
+
+
+
+	return NextResponse.json(newWO, {status: 201});
 }
