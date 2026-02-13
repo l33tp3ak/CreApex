@@ -14,19 +14,74 @@ import {NextRequest, NextResponse} from "next/server";
 
 export async function GET() {
 	//Get all the data from the Note table in the database
-	const notes = await prisma.note.findMany();
-	return NextResponse.json(notes);
+	const invoice = await prisma.invoice.findMany();
+	return NextResponse.json(invoice);
 }
 
 export async function POST(req: NextRequest) {
 	//Extract from the body of the request
 	const body = await req.json();
-	const {title, content} = body;
+	const {purchaseRqNumberID, billingAddressID, shippingAddressID, totalBeforeTaxes, taxes, totalAfterTaxes, reservationFee, totalAfterFee} = body;
 
-	const newNote = await prisma.note.create({
-		data: {title, content}
+	const newInvoice = await prisma.invoice.create({
+		data: {purchaseRqNumberID, billingAddressID, shippingAddressID, totalBeforeTaxes, taxes, totalAfterTaxes, reservationFee, totalAfterFee}
 	});
 
 
-	return NextResponse.json(newNote, {status: 201});
+	return NextResponse.json(newInvoice, {status: 201});
+}
+
+
+
+
+
+export async function PATCH(req: NextRequest) {
+	//Extract from the body of the request
+	const body = await req.json();
+	const {invoice_ID_number, purchaseRqNumberID, billingAddressID, shippingAddressID, totalBeforeTaxes, taxes, totalAfterTaxes, reservationFee, totalAfterFee} = body;
+
+	let invoiceToUpdate;
+
+	try {
+		invoiceToUpdate = await prisma.invoice.update({
+			where: {invoice_ID_number },
+			data: {purchaseRqNumberID, billingAddressID, shippingAddressID, totalBeforeTaxes, taxes, totalAfterTaxes, reservationFee, totalAfterFee}
+		});
+	} catch (e) {
+		console.log("An error has occured: " + e);
+		return ("An error has occured: " + e);
+	}
+
+
+
+	return NextResponse.json(invoiceToUpdate, {status: 201});
+}
+
+
+
+
+
+
+export async function DELETE(req: NextRequest) {
+	//Extract from the body of the request
+	const body = await req.json();
+	const {invoice_ID_number} = body;
+
+
+	let invoiceToDelete;
+
+	try {
+		invoiceToDelete = await prisma.invoice.delete({
+			where: {
+				invoice_ID_number
+			}
+		});
+	} catch (e) {
+		console.log("An error has occured: " + e);
+		return ("An error has occured: " + e);
+	}
+
+
+
+	return NextResponse.json(invoiceToDelete, {status: 201});
 }

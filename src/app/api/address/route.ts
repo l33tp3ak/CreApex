@@ -14,19 +14,86 @@ import {NextRequest, NextResponse} from "next/server";
 
 export async function GET() {
 	//Get all the data from the Note table in the database
-	const notes = await prisma.note.findMany();
-	return NextResponse.json(notes);
+	const address = await prisma.address.findMany();
+	return NextResponse.json(address);
 }
 
 export async function POST(req: NextRequest) {
 	//Extract from the body of the request
 	const body = await req.json();
-	const {title, content} = body;
+	const {streetNumber, streetName, postalCode, countryID, regionID} = body;
 
-	const newNote = await prisma.note.create({
-		data: {title, content}
+	const newAddress = await prisma.address.create({
+		data: {
+			streetNumber,
+			streetName,
+			postalCode,
+			countryID,
+			regionID
+		}
 	});
 
 
-	return NextResponse.json(newNote, {status: 201});
+	return NextResponse.json(newAddress, {status: 201});
+}
+
+
+
+
+
+export async function PATCH(req: NextRequest) {
+	//Extract from the body of the request
+	const body = await req.json();
+	const {address_ID, streetNumber, streetName, postalCode, countryID, regionID} = body;
+
+	let addressToUpdate;
+
+	try {
+		addressToUpdate = await prisma.address.update({
+			where: {address_ID},
+			data: {
+				streetNumber,
+				streetName,
+				postalCode,
+				countryID,
+				regionID
+			}
+		});
+	} catch (e) {
+		console.log("An error has occured: " + e);
+		return ("An error has occured: " + e);
+	}
+
+
+
+	return NextResponse.json(addressToUpdate, {status: 201});
+}
+
+
+
+
+
+
+export async function DELETE(req: NextRequest) {
+	//Extract from the body of the request
+	const body = await req.json();
+	const {address_ID} = body;
+
+
+	let addressToDelete;
+
+	try {
+		addressToDelete = await prisma.address.delete({
+			where: {
+				address_ID
+			}
+		});
+	} catch (e) {
+		console.log("An error has occured: " + e);
+		return ("An error has occured: " + e);
+	}
+
+
+
+	return NextResponse.json(addressToDelete, {status: 201});
 }

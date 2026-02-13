@@ -14,19 +14,73 @@ import {NextRequest, NextResponse} from "next/server";
 
 export async function GET() {
 	//Get all the data from the Note table in the database
-	const notes = await prisma.note.findMany();
-	return NextResponse.json(notes);
+	const material = await prisma.material.findMany();
+	return NextResponse.json(material);
 }
 
 export async function POST(req: NextRequest) {
 	//Extract from the body of the request
 	const body = await req.json();
-	const {title, content} = body;
+	const {name, weightUnit} = body;
 
-	const newNote = await prisma.note.create({
-		data: {title, content}
+	const newMaterial = await prisma.material.create({
+		data: {name, weightUnit}
 	});
 
 
-	return NextResponse.json(newNote, {status: 201});
+	return NextResponse.json(newMaterial, {status: 201});
+}
+
+
+
+
+export async function PATCH(req: NextRequest) {
+	//Extract from the body of the request
+	const body = await req.json();
+	const {material_ID, name, weightUnit} = body;
+
+	let modeleToUpdate;
+
+	try {
+		modeleToUpdate = await prisma.material.update({
+			where: {material_ID },
+			data: {name, weightUnit}
+		});
+	} catch (e) {
+		console.log("An error has occured: " + e);
+		return ("An error has occured: " + e);
+	}
+
+
+
+	return NextResponse.json(modeleToUpdate, {status: 201});
+}
+
+
+
+
+
+
+export async function DELETE(req: NextRequest) {
+	//Extract from the body of the request
+	const body = await req.json();
+	const {material_ID} = body;
+
+
+	let modeleToDelete;
+
+	try {
+		modeleToDelete = await prisma.material.delete({
+			where: {
+				material_ID
+			}
+		});
+	} catch (e) {
+		console.log("An error has occured: " + e);
+		return ("An error has occured: " + e);
+	}
+
+
+
+	return NextResponse.json(modeleToDelete, {status: 201});
 }

@@ -14,19 +14,74 @@ import {NextRequest, NextResponse} from "next/server";
 
 export async function GET() {
 	//Get all the data from the Note table in the database
-	const notes = await prisma.note.findMany();
-	return NextResponse.json(notes);
+	const language = await prisma.language.findMany();
+	return NextResponse.json(language);
 }
 
 export async function POST(req: NextRequest) {
 	//Extract from the body of the request
 	const body = await req.json();
-	const {title, content} = body;
+	const {language_ID, name, apiName} = body;
 
-	const newNote = await prisma.note.create({
-		data: {title, content}
+	const newLanguage = await prisma.language.create({
+		data: {language_ID, name, apiName}
 	});
 
 
-	return NextResponse.json(newNote, {status: 201});
+	return NextResponse.json(newLanguage, {status: 201});
+}
+
+
+
+
+
+export async function PATCH(req: NextRequest) {
+	//Extract from the body of the request
+	const body = await req.json();
+	const {language_ID, name, apiName} = body;
+
+	let languageToUpdate;
+
+	try {
+		languageToUpdate = await prisma.language.update({
+			where: {language_ID },
+			data: {name, apiName}
+		});
+	} catch (e) {
+		console.log("An error has occured: " + e);
+		return ("An error has occured: " + e);
+	}
+
+
+
+	return NextResponse.json(languageToUpdate, {status: 201});
+}
+
+
+
+
+
+
+export async function DELETE(req: NextRequest) {
+	//Extract from the body of the request
+	const body = await req.json();
+	const {language_ID} = body;
+
+
+	let languageToDelete;
+
+	try {
+		languageToDelete = await prisma.language.delete({
+			where: {
+				language_ID
+			}
+		});
+	} catch (e) {
+		console.log("An error has occured: " + e);
+		return ("An error has occured: " + e);
+	}
+
+
+
+	return NextResponse.json(languageToDelete, {status: 201});
 }

@@ -14,19 +14,86 @@ import {NextRequest, NextResponse} from "next/server";
 
 export async function GET() {
 	//Get all the data from the Note table in the database
-	const notes = await prisma.note.findMany();
-	return NextResponse.json(notes);
+	const cart = await prisma.cart.findMany();
+	return NextResponse.json(cart);
 }
 
 export async function POST(req: NextRequest) {
 	//Extract from the body of the request
 	const body = await req.json();
-	const {title, content} = body;
+	const {cartOwnerID, orderedModelID, orderedMaterialID, orderedColourID, quantityOrdered} = body;
 
-	const newNote = await prisma.note.create({
-		data: {title, content}
+	const newCartItem = await prisma.cart.create({
+		data: {cartOwnerID, orderedModelID, orderedMaterialID, orderedColourID, quantityOrdered}
 	});
 
 
-	return NextResponse.json(newNote, {status: 201});
+	return NextResponse.json(newCartItem, {status: 201});
+}
+
+
+
+
+
+export async function PATCH(req: NextRequest) {
+	//Extract from the body of the request
+	const body = await req.json();
+	const {cartOwnerID, orderedModelID, orderedMaterialID, orderedColourID, quantityOrdered} = body;
+
+	let cartItemToUpdate;
+
+	try {
+		cartItemToUpdate = await prisma.cart.update({
+			where: {
+				cartOwnerID_orderedModelID_orderedMaterialID_orderedColourID: {
+					cartOwnerID,
+					orderedModelID,
+					orderedMaterialID,
+					orderedColourID
+				}
+			},
+			data: {quantityOrdered}
+		});
+	} catch (e) {
+		console.log("An error has occured: " + e);
+		return ("An error has occured: " + e);
+	}
+
+
+
+	return NextResponse.json(cartItemToUpdate, {status: 201});
+}
+
+
+
+
+
+
+export async function DELETE(req: NextRequest) {
+	//Extract from the body of the request
+	const body = await req.json();
+	const {cartOwnerID, orderedModelID, orderedMaterialID, orderedColourID} = body;
+
+
+	let cartItemToDelete;
+
+	try {
+		cartItemToDelete = await prisma.cart.delete({
+			where: {
+				cartOwnerID_orderedModelID_orderedMaterialID_orderedColourID: {
+					cartOwnerID,
+					orderedModelID,
+					orderedMaterialID,
+					orderedColourID
+				}
+			}
+		});
+	} catch (e) {
+		console.log("An error has occured: " + e);
+		return ("An error has occured: " + e);
+	}
+
+
+
+	return NextResponse.json(cartItemToDelete, {status: 201});
 }

@@ -72,3 +72,32 @@ export async function PATCH(req: NextRequest) {
 
 	return NextResponse.json(newWO, {status: 201});
 }
+
+
+
+
+
+
+export async function DELETE(req: NextRequest) {
+	//Extract from the body of the request
+	const body = await req.json();
+	const {work_order_ID_number} = body;
+
+
+	let WOToDelete;
+
+	try {
+		WOToDelete = await prisma.workOrder.delete({
+			where: {
+				work_order_ID_number
+			}
+		});
+	} catch (e) {
+		console.log("An error has occured: " + e);
+		return ("An error has occured: " + e);
+	}
+
+
+
+	return NextResponse.json(WOToDelete, {status: 201});
+}

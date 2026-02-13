@@ -14,19 +14,74 @@ import {NextRequest, NextResponse} from "next/server";
 
 export async function GET() {
 	//Get all the data from the Note table in the database
-	const notes = await prisma.note.findMany();
-	return NextResponse.json(notes);
+	const country = await prisma.country.findMany();
+	return NextResponse.json(country);
 }
 
 export async function POST(req: NextRequest) {
 	//Extract from the body of the request
 	const body = await req.json();
-	const {title, content} = body;
+	const {name, currencyID} = body;
 
-	const newNote = await prisma.note.create({
-		data: {title, content}
+	const newCountry = await prisma.country.create({
+		data: {name, currencyID}
 	});
 
 
-	return NextResponse.json(newNote, {status: 201});
+	return NextResponse.json(newCountry, {status: 201});
+}
+
+
+
+
+
+export async function PATCH(req: NextRequest) {
+	//Extract from the body of the request
+	const body = await req.json();
+	const {country_ID, name, currencyID} = body;
+
+	let countryToUpdate;
+
+	try {
+		countryToUpdate = await prisma.country.update({
+			where: {country_ID },
+			data: {name, currencyID}
+		});
+	} catch (e) {
+		console.log("An error has occured: " + e);
+		return ("An error has occured: " + e);
+	}
+
+
+
+	return NextResponse.json(countryToUpdate, {status: 201});
+}
+
+
+
+
+
+
+export async function DELETE(req: NextRequest) {
+	//Extract from the body of the request
+	const body = await req.json();
+	const {country_ID} = body;
+
+
+	let countryToDelete;
+
+	try {
+		countryToDelete = await prisma.country.delete({
+			where: {
+				country_ID
+			}
+		});
+	} catch (e) {
+		console.log("An error has occured: " + e);
+		return ("An error has occured: " + e);
+	}
+
+
+
+	return NextResponse.json(countryToDelete, {status: 201});
 }

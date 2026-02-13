@@ -11,7 +11,7 @@
 */
 import prisma from "@/lib/prisma";
 import {NextRequest, NextResponse} from "next/server";
-import {ITILTicketType, Request} from "@/generated/prisma/client";
+//import {ITILTicketType, Request} from "@/generated/prisma/client";
 
 export async function GET() {
 	//Get all the data from the Note table in the database in the JSON format
@@ -104,3 +104,33 @@ For bookkeeping reason, we do not delete requests outright, we cancel them.
 
 Since we don't delete them, we don't need the DELETE of crud
 */
+
+
+
+
+
+
+
+export async function DELETE(req: NextRequest) {
+	//Extract from the body of the request
+	const body = await req.json();
+	const {request_ID_number} = body;
+
+
+	let rqToDelete;
+
+	try {
+		rqToDelete = await prisma.request.delete({
+			where: {
+				request_ID_number
+			}
+		});
+	} catch (e) {
+		console.log("An error has occured: " + e);
+		return ("An error has occured: " + e);
+	}
+
+
+
+	return NextResponse.json(rqToDelete, {status: 201});
+}

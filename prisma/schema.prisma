@@ -15,7 +15,7 @@ datasource db {
 
 model User {
 	user_ID							String					@id @default(uuid())
-	stackAuthId						String					@unique // ID de Stack Auth
+	stackAuthId						String?				@unique // ID de Stack Auth
 	name								String?
 	avatar								String?
 	username							String					@unique
@@ -44,7 +44,7 @@ model User {
 
 //1:n
 //Presently selected default address to use when doing an order
-	defaultAddress					Address?		@relation("UserDefaultAddress", fields: [defaultAddressID], references: [address_ID])
+	defaultAddress					Address?		@relation("UserDefaultAddress", fields: [defaultAddressID], references: [address_ID], onDelete: SetNull)
 	defaultAddressID				String?
 
 
@@ -77,12 +77,12 @@ model Address {
 //Relations
 //1:n
 //Country of the address
-	addressCountry					Country				@relation(fields: [countryID], references: [country_ID])
+	addressCountry					Country				@relation(fields: [countryID], references: [country_ID], onUpdate: Cascade, onDelete: Cascade)
 	countryID						Int
 
 //1:n
 //Province / State / Region of the address
-	region								ProvinceState		@relation(fields: [regionID], references: [region_ID])
+	region								ProvinceState		@relation(fields: [regionID], references: [region_ID], onUpdate: Cascade, onDelete: Cascade)
 	regionID							Int
 
 	defaultAddresses				User[]					@relation("UserDefaultAddress")
@@ -104,9 +104,9 @@ model Address {
 
 //Joining table
 model AddressBook {
-	addresses							Address				@relation(fields: [addressesID], references: [address_ID])
+	addresses							Address				@relation(fields: [addressesID], references: [address_ID], onUpdate: Cascade, onDelete: Cascade)
 	addressesID						String					//relation scalar field (used in the "@relation" attribute above)
-	users								User					@relation(fields: [usersID], references: [user_ID])
+	users								User					@relation(fields: [usersID], references: [user_ID], onUpdate: Cascade, onDelete: Cascade)
 	usersID							String
 
 //manually sets the ID to be 2 fields
@@ -123,7 +123,7 @@ model Country {
 //Relations
 //1:n
 //Currency of the country
-	currency							Currency				@relation(fields: [currencyID], references: [currency_ID])
+	currency							Currency				@relation(fields: [currencyID], references: [currency_ID], onUpdate: Cascade, onDelete: Cascade)
 	currencyID						Int
 
 //n:1
@@ -139,7 +139,7 @@ model ProvinceState {
 
 //Relations
 //1:n
-	country							Country				@relation(fields: [countryID], references: [country_ID])
+	country							Country				@relation(fields: [countryID], references: [country_ID], onUpdate: Cascade, onDelete: Cascade)
 	countryID						Int
 
 //n:1
@@ -160,6 +160,7 @@ Par exemple, "en_GB" peut etre utiliser et peut representer un parametre dans l'
 model Language {
 	language_ID						String					@id
 	name								String					@unique
+	apiName							String?				@unique
 	
 //Relations
 //As this is a 1:N relationship, this side of the relation uses a list which CAN be empty, as a language can have 0 users
@@ -207,6 +208,7 @@ model Modele3D {
 //Relations
 //1:n
 //User who uploaded the model
+//This is not required as the model may be uploaded at checkout by a user without an account.
 	uploader							User?					@relation(fields: [uploaderID], references: [user_ID])
 	uploaderID						String?
 
@@ -261,13 +263,17 @@ Il faut avoir les 2(+) clefs composant la clé primaire comme clefs étrangères
 Chaque clef doit être référencé dans le même orde que les clés sont référencé dans la table de jointure.
 */
 model MaterialColour {
-	material							Material				@relation(fields: [materialID], references: [material_ID])
+	material							Material				@relation(fields: [materialID], references: [material_ID], onUpdate: Cascade, onDelete: Cascade)
 	materialID						Int					//relation scalar field (used in the "@relation" attribute above)
-	colour								Colour					@relation(fields: [colourID], references: [colour_ID])
+	colour								Colour					@relation(fields: [colourID], references: [colour_ID], onUpdate: Cascade, onDelete: Cascade)
 	colourID							Int
 
 	quantityAvailable				Float					//Each colour of each material has it's own quantity available, which represents in the inventory the amount available in the defined weightUnit
 	priceByWeight					Decimal
+
+
+//Forces the combination to be unique
+	@@unique([materialID, colourID])
 
 //manually sets the ID to be 2 fields
 	@@id([materialID, colourID])
@@ -363,7 +369,7 @@ If a user does not login for a month, their cart is emptied (all of their entrie
 Create bookmarks/favourites/thinking of purchasing?, allowing us to save the models inside of the cart for the user without forever having info on this table
 */
 model Cart {
-	cartOwner						User				@relation(fields: [cartOwnerID], references: [user_ID])
+	cartOwner						User				@relation(fields: [cartOwnerID], references: [user_ID], onDelete: Cascade)
 	cartOwnerID					String				//relation scalar field (used in the "@relation" attribute above)
 	orderedModel					Modele3D		@relation(fields: [orderedModelID], references: [modele_3d_ID])
 	orderedModelID				String
@@ -373,6 +379,8 @@ model Cart {
 	orderedColourID				Int
 
 	quantityOrdered				Int
+
+	@@unique([cartOwnerID, orderedModelID, orderedMaterialID, orderedColourID])
 
 //manually sets the ID to be several fields
 	@@id([cartOwnerID, orderedModelID, orderedMaterialID, orderedColourID])

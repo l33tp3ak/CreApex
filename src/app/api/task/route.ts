@@ -47,10 +47,10 @@ export async function PATCH(req: NextRequest) {
 	const {task_ID_number, selectedMaterial, selectedColour, status} = body;
 
 
-	let newWO;
+	let taskToUpdate;
 
 	try {
-		newWO = await prisma.task.update({
+		taskToUpdate = await prisma.task.update({
 			where: {task_ID_number},
 			data: {selectedMaterial, selectedColour, status}
 		});
@@ -63,5 +63,34 @@ export async function PATCH(req: NextRequest) {
 
 
 
-	return NextResponse.json(newWO, {status: 201});
+	return NextResponse.json(taskToUpdate, {status: 201});
+}
+
+
+
+
+
+
+export async function DELETE(req: NextRequest) {
+	//Extract from the body of the request
+	const body = await req.json();
+	const {task_ID_number} = body;
+
+
+	let taskToDelete;
+
+	try {
+		taskToDelete = await prisma.task.delete({
+			where: {
+				task_ID_number
+			}
+		});
+	} catch (e) {
+		console.log("An error has occured: " + e);
+		return ("An error has occured: " + e);
+	}
+
+
+
+	return NextResponse.json(taskToDelete, {status: 201});
 }
