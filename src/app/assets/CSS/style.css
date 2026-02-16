@@ -1,0 +1,575 @@
+/* 	This creates a font-family using a font file accessed through a relative path. If the font is already present on the user's computer that font is used instead. */
+/*	The "font-family" property is used to set a custom name for the fonts that will be used in the webpages and in the CSS */
+/*	The "src" property defines the location of the font being used, which can be locally stored or stored online.
+		I have found some issues with using both multiline statements and individual lines statements when trying to define custom fonts, I am unsure what the cause for them is as the documentation by the W3 states they should work.
+		For now, the working solution is a single line of working fonts being declared with no alternate font files.*/
+/*	Credit to Nline Web Font (https://www.onlinewebfonts.com)*/
+@font-face {
+		font-family: "Touhou 6";
+		src: local("Touhou 6"),
+				url("../fonts/DFPPOPCornW12.ttf") format(truetype);
+}
+
+/*	This is the font used for the Bionicle logo. It is stretched to 107% in the logo, unlike the normal font and is only using the uppercase*/
+@font-face {
+		font-family: "Bionicle";
+		src: url("../fonts/GoudyTrajanRegular.ttf") format(truetype);
+		font-stretch: 107%;
+}
+
+/*	General Styling	*/
+* {
+		box-sizing: border-box;
+}
+
+header {
+		color: white;
+		background-color: #466eb5;
+		/* padding creates space INSIDE the element */
+		padding: 50px;
+		/* margin creates space OUTSIDE the element */
+		margin: 0;
+		/* The order of spacing can be visualised in certain browsers such as Google Chrome*/
+
+		/*This changes the alignment for the text*/
+		text-align: center;
+		font-family:'Courrier New', Courrier, monospace;
+		opacity: 0.9;
+		height: 200px;
+}
+
+/*	Changing the style of the <BODY> changes the default style for all of the content. */
+body {
+		margin:0;
+		padding: 0;
+		font-family: Arial, Helvetica, sans-serif;
+		background-image: url("../images/Bohrok-KalBackground2.jpg");
+		background-repeat: no-repeat;
+		background-attachment: fixed;
+		background-size: cover;
+}
+
+input {
+		min-width: 170px;
+}
+
+.h1, .h2, .h3, .h4, .h5, .h6, h1, h2, h3, h4, h5, h6 {
+		font-weight: 500;
+		line-height: 1.2;
+}
+
+h1 {
+		font-size: 2.5rem;
+		color: #03172c;
+		font-family: "Bionicle", serif;
+}
+
+h2 {
+		font-size: 2rem;
+}
+
+main {
+		/* This assigns the width of the element as 70% of the parent element. */
+		/* The padding is assigned 25% width of the viewport, or window, hence "vw". */
+		/*padding: 25vw;*/
+		/*padding-left: 15%;*/
+		width: 70%;
+		color: white;
+		margin-left: auto;
+		margin-right: auto;
+		height: auto;
+		border: none;
+		font-size: 20px;
+		font-family: Arial, Helvetica, sans-serif;
+		background-color: rgba(0, 0, 0, 0.6);
+}
+
+
+@media only screen and not (min-width: 992px)  {
+		* {
+				font-size: 16px;
+		}
+
+		main {
+				font-size: 16px;
+		}
+
+		h1 {
+				font-size: 30px;
+				color: #03172c;
+		}
+
+		h2 {
+				font-size: 26px;
+		}
+
+		h3 {
+				font-size: 24px;
+		}
+
+		h4 {
+				font-size: 18px;
+		}
+}
+
+
+
+/*	
+	Skeuomorphism is the designing concept of retaining the ornementatal design of an original object in another object serving the same purpose.
+	While the original design may not be necessary or even have a purpose anymore
+	it serves as a visual cue of its purpose to the user by making it look like something else with the same purpose.
+	A parallel can be made with biology in Batesian mimicry
+	where 2 harmful species advertise each other as harmful by resembling one another.
+	This reinforces the message in both species, and, likewise, here it reinforces the POSITIVE message of one another.
+	
+	
+	Skeuomorphism serves an important role in interface integration and UI design. 
+	By making the interface recognizable, it becomes easier for new users to understand and thus use the application.
+	This can be done (and is often accomplished) by imitating real-life objects with the same purpose.
+	For example, calculator programs have buttons that resemble real-life calculators.
+	Another example is the save function, practically always represented by a floppy disk.
+	While floppy disks went extinct, their legacy of saving information onto them endured.
+	
+	Below is a group of properties making buttons imitate real-life buttons
+	by giving them a somewhat 3d looking and feel.
+*/
+.skeuomorphic {
+		border: 2px solid #0c960c;
+		border-radius: 5px;
+		color: #F8F8F8;
+		box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.2), 0px -2px 2px rgba(255, 255, 255, 0.5) inset, 0 2px 2px rgba(255, 255, 255, 0.8) inset;
+		background: linear-gradient(#1D1, #0ebc0e);
+		text-shadow: 0 -2px #0c960c;
+}
+
+.skeuomorphic:hover {
+		box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.1), 0px -2px 2px rgba(255, 255, 255, 0.25) inset, 0 2px 2px rgba(255, 255, 255, 0.4) inset;
+		background: #0ebc0e;
+		background: linear-gradient(#0ebc0e, #0c960c);
+		border-color: #064f06;
+}
+
+.skeuomorphic:active {
+		margin-top: 2px;
+		margin-bottom: -2px;
+		box-shadow: 0px 2px 2px rgba(63, 63, 63, 0.1), 0px -2px 2px rgba(255, 255, 255, 0.25) inset, 0 2px 2px rgba(255, 255, 255, 0.4) inset;
+		background: #0c960c;
+		background: linear-gradient(#0c960c, #0ebc0e);
+}
+
+/*	This is a group of styling for the breadcrumb list*/
+/*
+.breadcrumb {
+		list-style-type: none;
+}
+
+.breadcrumb li {
+		display: inline;
+		list-style-type: none;
+}
+
+.breadcrumb a {
+		display: inline;
+		padding: 0px 14px;
+		text-decoration: none;
+		text-align: center;
+}
+
+/*	Select the first "<li>" element immediately after an "<li>" element inside an element with the class "breadcrumb", and insert something before its content*/
+/*
+.breadcrumb li+li::before {
+		content: ">";
+}
+*/
+
+/*
+This would turn the breadcrumbs into arrows
+*/
+.breadcrumb {
+		text-align: left;
+		list-style-type: none;
+		/* Content that is too big to fit is clipped and invisible. */
+		overflow: hidden;
+}
+
+.breadcrumb li {
+		display: inline-block;
+}
+
+.breadcrumb a {
+		color: #fff;
+		background: darkcyan;
+		text-decoration: none;
+		height: 30px;
+		line-height: 30px;
+		position: relative;
+		text-align: center;
+		vertical-align: middle;
+		margin: auto 15px auto 0;
+		padding: 0 10px;
+		display: inline-block;
+}
+
+.breadcrumb a:hover {
+		background-color: blue;
+}
+.breadcrumb a:hover::before {
+		border-color: blue;
+		border-left-color: transparent;
+}
+.breadcrumb a:hover::after {
+		border-left-color: blue;
+}
+
+.breadcrumb li+li a::before, .breadcrumb a::after {
+		content: "";
+		position: absolute;
+		border-color: darkcyan;
+		border-style: solid;
+		border-width: 15px 10px;
+}
+/*	
+		Selects the content BEFORE an "<a>" element that is the child of an "<li>" element that is placed immediately another "<li>" element. 
+		All of these elements are the children of an element with the class ".breadcrumb".
+		See example below:
+		
+		<ul class=".breadcrumb">
+				<li>[...]</li>
+				<li>
+						[THIS IS THE CONTENT SELECTED]<a></a>
+				</li>
+		</ul>
+*/
+.breadcrumb li+li a::before {
+		left: -10px;
+		border-left-color: transparent;
+}
+
+.breadcrumb a::after {
+		left: 100%;
+		border-color: transparent;
+		border-left-color: darkcyan;
+}
+
+
+
+
+
+.pageSection {
+		padding-top: 50px;
+}
+
+/*	The below styles elements by their tag AND their "class=" property. */
+img.alignment	{
+		/*
+		border: 20px solid blue;
+		margin: 50px;
+		*/
+		width: 100%;
+		height: 100%;
+		vertical-align: text-bottom;
+		/*
+		float:left;
+		*/
+}
+
+.imageMed {
+		height: auto;
+		width: 200px;
+}
+
+.verticalBottomRight{
+    position: fixed;
+    right: 1.5%;
+    bottom: 2%;
+}
+
+.arrow {
+		height: 50px;
+		width: auto;
+		opacity: 0;
+}
+
+
+.codecademyBanner {
+		background-color: #003b6f;
+		color: white;
+		margin-top: 75px;
+		text-align: center;
+		padding: 2.5em;
+}
+
+.fumoJill {
+		margin: 30px;
+		/*	
+				The "filter" property is used to apply a number of different visual effects (Functions) to an element.
+				IT CAN BE ON ANY ELEMENT, but is mostly used on "<img/>" tags and its functions reflect this.
+				To use multiple filters, separate each filter with a space.
+				
+				none																					Default value. Specifies no effects
+				
+				
+				blur(px)																			Applies a blur effect to the image. 
+																										A larger value will create more blur.  If no value is specified, 0 is used.
+				
+				
+				brightness(%)																	Adjusts the brightness of the image.  
+																										0% will make the image completely black. 
+																										100% (1) is default and represents the original image. 
+																										Values over 100% will increase the brightness of the image.
+				
+				
+				contrast(%)																		Adjusts the contrast of the image.  
+																										0% will make the image completely black. 
+																										100% (1) is default, and represents the original image. 
+																										Values over 100% will increase the contrast.
+				
+				
+				drop-shadow(h-shadow v-shadow blur spread color)				Applies a drop shadow effect to the image.  
+																										Possible values: 
+																										h-shadow	-	Required. Specifies a pixel value for the horizontal shadow. 
+																										Negative values place the shadow to the left of the image.  
+																										
+																										v-shadow	-	Required. Specifies a pixel value for the vertical shadow. 
+																										Negative values place the shadow above the image.  
+																										
+																										blur	-	Optional. Specifies a blur effect in pixels for the shadow.
+																										A larger value will create more blur (the shadow becomes bigger and lighter). 
+																										Negative values are not allowed. 
+																										If not specified, 0 is used (the shadow's edge is sharp).  
+																										
+																										spread	-	Optional. This is the fourth value, and must be in pixels. 
+																										Positive values will cause the shadow to expand and grow bigger.
+																										Negative values will cause the shadow to shrink. 
+																										If not specified, 0 is used (the shadow will be the same size as the element). 
+																										WARNING: 
+																										"spread" is not supported in Chrome, Safari and Opera, and maybe other browsers. 
+																										It will not render if added.  
+																										
+																										color	-	Optional. Adds a color to the shadow. 
+																										If not specified, the color depends on the browser (often black).  
+																										
+																										An example of creating a red shadow, which is 8px big both horizontally and vertically, with a blur effect of 10px:  
+																										filter: drop-shadow(8px 8px 10px red); 
+																										
+																										Tip: This filter is similar to the box-shadow property.
+
+				
+				grayscale(%)																		Converts the image to grayscale.  
+																										0% (0) is default and represents the original image. 
+																										100% will make the image completely gray (used for black and white images).  
+																										Negative values are not allowed.
+
+				
+				hue-rotate(deg)																	Applies a hue rotation on the image. 
+																										The value defines the number of degrees around the color circle the image samples will be adjusted. 
+																										0deg is default, and represents the original image.  
+																										Maximum value is 360deg.
+				
+				
+				invert(%)																			Inverts the samples in the image.  
+																										0% (0) is default and represents the original image. 
+																										100% will make the image completely inverted.
+																										Negative values are not allowed.
+
+				
+				opacity(%)																		Sets the opacity level for the image. 
+																										0% is completely transparent. 
+																										100% (1) is default and represents the original image (no transparency).
+																										Negative values are not allowed. 
+																										
+																										Tip: This filter is similar to the opacity property.
+
+				
+				saturate(%)																		Saturates the image.  
+																										0% (0) will make the image completely un-saturated. 
+																										100% is default and represents the original image. 
+																										Values over 100% provides super-saturated results. 
+																										Negative values are not allowed.
+
+				
+				sepia(%)																			Converts the image to sepia.  
+																										0% (0) is default and represents the original image. 
+																										100% will make the image completely sepia.
+																										Negative values are not allowed.
+
+				
+				url()																					The url() function takes the location of an XML file that specifies an SVG filter
+																										May include an anchor to a specific filter element.
+																										Example:  filter: url(svg-url#element-id)
+
+				
+				Below we are using the "drop-shadow(h-shadow v-shadow blur spread color)" function.
+				It creates a 2px shadow on the LEFT and BOTTOM of the element with 1px BLUR and is BLACK.
+		*/
+		filter: drop-shadow(3px 3px 3px black);
+}
+
+#fumoBanner {
+		color: #003b6f;
+		font-size: 100px;
+		font-family: "Touhou 6";
+}
+
+
+
+
+
+/*	Form/API Styling	 */
+
+/*	The below styles elements by their "id=" property. */
+#birthdayForm {
+		/* 
+		The "visibility:" property specifies whether or not an element is visible
+		however, only the content can be hidden.
+		Unlike the "display:" property, the elements STAY ON THE PAGE, and still takes space on it.
+		*/
+		display: none;
+}
+
+#holidaysForm {
+		display: none;
+}
+
+#YoutubeAPI {
+		margin: 4em auto 4em auto;
+}
+
+
+/*	The below styles elements by their "class=" property.	*/
+.videoInfo{
+		margin-top: 2vw;
+		margin-bottom: 2vw;
+}
+
+
+.thumbnail {
+		height: 100%;
+		width: auto;
+}
+
+
+
+
+
+/*	Game Styling */
+.scoreboard	{
+		margin: 0;
+		padding: 0;
+		width: 30%;
+		display: inline-flex;
+}
+
+.scoreboardLine{
+		margin: 0.5rem 0;
+		padding: 0;
+		color: black;
+		opacity: 1;
+}
+
+.scoreBoardLeft{
+		margin: 0;
+		padding: 0;
+		flex: 50%;
+}
+
+.scoreBoardRight{
+		margin: 0;
+		padding: 0;
+		flex: 50%;
+}
+
+
+.playerSprite{
+		height: 97px;
+		width: 77px;
+}
+
+#canvas2DGame01 {
+		background-color: lightgray;
+}
+
+#canvas2DGame02 {
+		background-color: black;
+}
+
+
+
+
+/*	Sidenav Styling	*/
+.sideNav {
+		position: fixed;
+		left: 0;
+		top: 40%;
+		width: 50px;
+		z-index: 5;
+		text-align: left;
+		border: none;
+		box-shadow: 0 2px 4px black;
+}
+
+.sideNav ul {
+		/* This removes padding and margins between elements. */
+		margin: 0;
+		padding: 0;
+		/* Aligns the text and elements at the center of the BLOCK. */
+		text-align: center;
+		text-decoration: none;
+		list-style-type: none;
+		overflow: hidden;
+}
+
+.sideNav img{
+		display: block;
+
+}
+
+@media only screen and not (min-width: 992px)  {
+		.sideNav {
+				width: 25px;
+		}
+}
+
+
+
+/* These are for general purpose in order to align specific elements. */
+.left{
+		text-align: left;
+}
+
+.center{
+		text-align: center;
+}
+
+.right{
+		text-align: right;
+}
+
+.center{
+		text-align: center;
+}
+
+.verticalAlignTop {
+		vertical-align: top;
+}
+
+.verticalAlignBottom {
+		vertical-align: bottom;
+}
+
+.floatleft{
+		float:left;
+		border:none;
+}
+
+.clear{
+		clear:both;
+}
+
+.bold {
+		font-weight: bold;
+}
+
+.italic {
+		font-style: italic;
+}

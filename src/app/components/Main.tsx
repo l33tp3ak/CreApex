@@ -1,5 +1,7 @@
 
-import '@/assets/CSS/menu.css'
+
+
+import '@/assets/CSS/style.css'
 import {useLocation} from "react-router-dom";
 import Link from "next/link";
 import React from "react";
@@ -15,12 +17,12 @@ type Props = {
 };
 
 //
-export const Menu = ({children}: Props) => {
+export const Main = ({children}: Props) => {
 	const [count, setCount] = React.useState(0)
 
 	return (
 		<>
-			<div id="topnav">
+			<div id="contenu">
 				<div id="mobileMenuButton" tabIndex={-1}>
 					<div className="mobileMenu"></div>
 					<div className="mobileMenu"></div>
@@ -48,4 +50,5 @@ export const Menu = ({children}: Props) => {
 		</>
 	)
 }
+
 

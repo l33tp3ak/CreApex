@@ -21,13 +21,13 @@ export async function GET() {
 export async function POST(req: NextRequest) {
 	//Extract from the body of the request
 	const body = await req.json();
-	const {name, path, netVolume, uploaderID} = body;
+	const {name, path, netVolume, description,uploaderID} = body;
 
 
 	let newModele3D;
 	try {
 		newModele3D = await prisma.modele3D.create({
-			data: {name, path, netVolume, uploaderID}
+			data: {name, path, netVolume, description, uploaderID}
 		});
 	} catch (e) {
 		console.log("An error has occured: " + e);
@@ -43,14 +43,14 @@ export async function POST(req: NextRequest) {
 export async function PATCH(req: NextRequest) {
 	//Extract from the body of the request
 	const body = await req.json();
-	const {modele_3d_ID, name, path, netVolume, uploaderID} = body;
+	const {modele_3d_ID, name, path, netVolume, description, uploaderID} = body;
 
 	let modeleToUpdate;
 
 	try {
 		modeleToUpdate = await prisma.modele3D.update({
 			where: {modele_3d_ID},
-			data: {name, path, netVolume, uploaderID}
+			data: {name, path, netVolume, description, uploaderID}
 		});
 	} catch (e) {
 		console.log("An error has occured: " + e);

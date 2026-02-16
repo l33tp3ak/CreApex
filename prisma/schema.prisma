@@ -204,6 +204,7 @@ model Modele3D {
 	name								String
 	path								String
 	netVolume						Float
+	description						String?
 
 //Relations
 //1:n
@@ -216,6 +217,21 @@ model Modele3D {
 	WOs								WorkOrder[]
 
 	cartItems						Cart[]
+
+	modeleImages					Modele3DImages[]
+}
+
+
+model Modele3DImages {
+	modele_3d_images_ID			Int					@id @default(autoincrement())
+	path								String					@unique
+
+//Relations
+//n:1
+	parentModele					Modele3D			@relation(fields: [parentModeleID], references: [modele_3d_ID])
+	parentModeleID				String
+//n:1
+	
 }
 
 
