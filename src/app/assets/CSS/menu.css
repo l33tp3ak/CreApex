@@ -102,11 +102,18 @@
 .SVGLink {
 				color:white;
 				width: 24px;
+				height: auto;
 				/* Allows us to align the SVG with the other elements in the menu */
 	text-decoration: none;
 				display: inline;
 		font-size: 0;
-				vertical-align: text-top;
+				vertical-align: top;
+}
+
+.navBar ul li a:hover .SVGLink {
+				color:#1e0d0b;
+		/* Creates a transition, in seconds, for the specified properties, separated by a comma. */
+		transition: color .5s;
 }
 
 

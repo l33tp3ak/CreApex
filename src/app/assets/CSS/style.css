@@ -288,16 +288,16 @@ img.alignment	{
 		height: 50px;
 		width: auto;
 		opacity: 0;
+		z-index: 10;
+}
+
+#arrowArea {
+	cursor: default;
+	pointer-events: none;
 }
 
 
-.codecademyBanner {
-		background-color: #003b6f;
-		color: white;
-		margin-top: 75px;
-		text-align: center;
-		padding: 2.5em;
-}
+
 
 .fumoJill {
 		margin: 30px;

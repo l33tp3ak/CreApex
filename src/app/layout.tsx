@@ -1,9 +1,14 @@
 
+'use client';
+
 import type {Metadata} from "next";
 //import {Geist, Geist_Mono} from "next/font/google";
-import "./globals.css";
-import '@/app/assets/CSS/';
-import showTopArrow from "@/lib/navigation";
+import '@/app/assets/CSS/style.css';
+import {showTopArrow} from "@/lib/navigation";
+import React from "react";
+import {TopArrow} from "./components/TopArrow";
+//import UpWhiteArrowOcreCircle from "@/app/assets/images/UpWhiteArrowOcreCircle.png";
+
 
 /*
 const geistSans = Geist({
@@ -27,18 +32,27 @@ export default function RootLayout({
 }: Readonly<{
 	children: React.ReactNode;
 }>) {
+
+	/*
+	 * This allows us to do a check whenever there is a scroll event in the window
+	 * which we want to do in order to make the navigation arrow that scrolls back to the top of the page.
+	 */
+	React.useEffect(() => {
+		window.addEventListener('scroll', showTopArrow);
+
+		// Cleanup function to remove the event listener
+		return () => {
+			window.removeEventListener('scroll', showTopArrow);
+		};
+	}, []);		// Empty dependency array ensures it runs once on mount
+
+	//const arrowRef = React.useRef(null);
 	return (
 		<html lang="en">
-			<body onScroll={showTopArrow}>
-
+			<body>
+				<div id="Home"></div>
 				{children}
-				<footer className={"verticalBottomRight"}>
-					<img id="topArrow" className={"arrow"} src="@/assets/images/UpWhiteArrowOcreCircle.png" useMap={"#imgmapTop"} alt="Up White Arrow Ocre Circle" title="Go to the top" />
-
-					<map name="imgmapTop">
-						<area shape="circle" alt="Up White Arrow Ocre Circle" title="Go to the top" coords="25,25,25" href="#Home" />
-					</map>
-				</footer>
+				<TopArrow />
 			</body>
 		</html>
 	);
