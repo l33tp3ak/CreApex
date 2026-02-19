@@ -4,17 +4,18 @@ import '@/app/assets/CSS/style.css';
 
 export function Contacts() {
 	
-
+	/*
+	 * This is a component to be used for when we have contacts for clients to get in touch with us.
+	 * Nous n'avons présentement pas l'infrastructure en place pour être contacté.
+	 */
 
 	return (
 		<>
 			<footer>
-				<div className={"contacts"}></div>
-
-
-				<map name="imgmapTop" draggable={false}>
-					<area id="arrowArea" draggable={false} shape="circle" alt="Up White Arrow Ocre Circle: Go to the top" coords="25,25,25" href="#Home" />
-				</map>
+				<div className={"contacts"}>
+				<h3 className={"bionicle"}>Contact Us</h3>
+				<div>bla bla bla</div>
+				</div>
 			</footer>
 		</>
 	)

@@ -10,6 +10,13 @@
 				url("../fonts/DFPPOPCornW12.ttf") format(truetype);
 }
 
+/*	This is the font used for the text of Yu-Gi-Oh! cards. */
+@font-face {
+		font-family: "Yugioh";
+		src: url("../fonts/Yu-Gi-OhMatrixBook.ttf") format(truetype);
+		font-stretch: 107%;
+}
+
 /*	This is the font used for the Bionicle logo. It is stretched to 107% in the logo, unlike the normal font and is only using the uppercase*/
 @font-face {
 		font-family: "Bionicle";
@@ -42,7 +49,7 @@ header {
 body {
 		margin:0;
 		padding: 0;
-		font-family: Arial, Helvetica, sans-serif;
+		font-family: "Yugioh", Arial, Helvetica, sans-serif;
 		background-image: url("../images/Bohrok-KalBackground2.jpg");
 		background-repeat: no-repeat;
 		background-attachment: fixed;
@@ -60,8 +67,11 @@ input {
 
 h1 {
 		font-size: 2.5rem;
-		color: #03172c;
+		/*color: #03172c;*/
 		font-family: "Bionicle", serif;
+		position: relative;
+		margin-top: 0;
+		padding-top: 1%;
 }
 
 h2 {
@@ -73,14 +83,14 @@ main {
 		/* The padding is assigned 25% width of the viewport, or window, hence "vw". */
 		/*padding: 25vw;*/
 		/*padding-left: 15%;*/
-		width: 70%;
+		width: 80%;
 		color: white;
 		margin-left: auto;
 		margin-right: auto;
 		height: auto;
 		border: none;
 		font-size: 20px;
-		font-family: Arial, Helvetica, sans-serif;
+		font-family: "Yugioh", Arial, Helvetica, sans-serif;
 		background-color: rgba(0, 0, 0, 0.6);
 }
 
@@ -92,11 +102,12 @@ main {
 
 		main {
 				font-size: 16px;
+				margin-top: 50px;
 		}
 
 		h1 {
 				font-size: 30px;
-				color: #03172c;
+				/*color: #03172c;*/
 		}
 
 		h2 {
@@ -157,99 +168,6 @@ main {
 		background: linear-gradient(#0c960c, #0ebc0e);
 }
 
-/*	This is a group of styling for the breadcrumb list*/
-/*
-.breadcrumb {
-		list-style-type: none;
-}
-
-.breadcrumb li {
-		display: inline;
-		list-style-type: none;
-}
-
-.breadcrumb a {
-		display: inline;
-		padding: 0px 14px;
-		text-decoration: none;
-		text-align: center;
-}
-
-/*	Select the first "<li>" element immediately after an "<li>" element inside an element with the class "breadcrumb", and insert something before its content*/
-/*
-.breadcrumb li+li::before {
-		content: ">";
-}
-*/
-
-/*
-This would turn the breadcrumbs into arrows
-*/
-.breadcrumb {
-		text-align: left;
-		list-style-type: none;
-		/* Content that is too big to fit is clipped and invisible. */
-		overflow: hidden;
-}
-
-.breadcrumb li {
-		display: inline-block;
-}
-
-.breadcrumb a {
-		color: #fff;
-		background: darkcyan;
-		text-decoration: none;
-		height: 30px;
-		line-height: 30px;
-		position: relative;
-		text-align: center;
-		vertical-align: middle;
-		margin: auto 15px auto 0;
-		padding: 0 10px;
-		display: inline-block;
-}
-
-.breadcrumb a:hover {
-		background-color: blue;
-}
-.breadcrumb a:hover::before {
-		border-color: blue;
-		border-left-color: transparent;
-}
-.breadcrumb a:hover::after {
-		border-left-color: blue;
-}
-
-.breadcrumb li+li a::before, .breadcrumb a::after {
-		content: "";
-		position: absolute;
-		border-color: darkcyan;
-		border-style: solid;
-		border-width: 15px 10px;
-}
-/*	
-		Selects the content BEFORE an "<a>" element that is the child of an "<li>" element that is placed immediately another "<li>" element. 
-		All of these elements are the children of an element with the class ".breadcrumb".
-		See example below:
-		
-		<ul class=".breadcrumb">
-				<li>[...]</li>
-				<li>
-						[THIS IS THE CONTENT SELECTED]<a></a>
-				</li>
-		</ul>
-*/
-.breadcrumb li+li a::before {
-		left: -10px;
-		border-left-color: transparent;
-}
-
-.breadcrumb a::after {
-		left: 100%;
-		border-color: transparent;
-		border-left-color: darkcyan;
-}
 
 
 
@@ -279,9 +197,9 @@ img.alignment	{
 }
 
 .verticalBottomRight{
-    position: fixed;
-    right: 1.5%;
-    bottom: 2%;
+		position: fixed;
+		right: 1.5%;
+		bottom: 2%;
 }
 
 .arrow {
@@ -292,8 +210,24 @@ img.alignment	{
 }
 
 #arrowArea {
-	cursor: default;
-	pointer-events: none;
+		cursor: default;
+		pointer-events: none;
+}
+
+footer {
+		display: block;
+		color: white;
+		background-color: rgba(0, 0, 0, 0.6);
+		height: 200px;
+}
+
+.contacts {
+		position:absolute;
+		display: block;
+		width: 80%;
+		margin-left: 10%;
+		margin-right: auto;
+		
 }
 
 
@@ -557,6 +491,10 @@ img.alignment	{
 		vertical-align: bottom;
 }
 
+.verticalAlignMiddle {
+		vertical-align: middle;
+}
+
 .floatleft{
 		float:left;
 		border:none;
@@ -572,4 +510,8 @@ img.alignment	{
 
 .italic {
 		font-style: italic;
+}
+
+.bionicle {
+	font-family: "Bionicle", Arial, Helvetica, sans-serif;
 }

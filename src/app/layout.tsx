@@ -7,7 +7,11 @@ import '@/app/assets/CSS/style.css';
 import {showTopArrow} from "@/lib/navigation";
 import React from "react";
 import {TopArrow} from "./components/TopArrow";
+import {Contacts} from "./components/Contacts";
+import {Menu} from "./components/Menu";
+import {LeftMenu} from "./components/LeftMenu";
 //import UpWhiteArrowOcreCircle from "@/app/assets/images/UpWhiteArrowOcreCircle.png";
+
 
 
 /*
@@ -51,8 +55,16 @@ export default function RootLayout({
 		<html lang="en">
 			<body>
 				<div id="Home"></div>
+				<Menu>
+					<LeftMenu></LeftMenu>
+				</Menu>
 				{children}
 				<TopArrow />
+				{/*
+				 * Pour plus tard, lorsque notre architecture est en place.
+				 * <Contacts />
+				 * */}
+
 			</body>
 		</html>
 	);
