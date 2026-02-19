@@ -16,7 +16,8 @@ datasource db {
 model User {
 	user_ID							String					@id @default(uuid())
 	stackAuthId						String?				@unique // ID de Stack Auth
-	name								String?
+	firstName						String
+	lastName							String
 	avatar								String?
 	username							String					@unique
 	email								String					@unique
@@ -34,8 +35,8 @@ model User {
 //We need to name the relation because there can be more than one relation on the same model
 //Every relation to a model with multiple relations MUST be named, especially if a model has multiple N:1 relations to the same model
 //The name of the relation is enclosed within "", here "UserDisplayLanguage"
-	displayLanguage					Language				@relation("UserDisplayLanguage", fields: [languageID], references: [language_ID])
-	languageID						String
+	displayLanguage					Language?				@relation("UserDisplayLanguage", fields: [languageID], references: [language_ID])
+	languageID						String?
 
 //M:n
 //Address Book of the user

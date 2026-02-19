@@ -1,7 +1,11 @@
 
+
 'use client';
 import Image from "next/image";
 import {Menu} from "./components/Menu";
+//filesystem
+//https://nodejs.org/api/fs.html
+//import fs from "fs";
 
 export default function Home() {
 	return (

@@ -24,7 +24,8 @@ export async function POST(req: NextRequest) {
 	const body = await req.json();
 	const {
 		stackAuthId,
-		name,
+		firstName,
+		lastName,
 		avatar,
 		username,
 		email,
@@ -44,7 +45,8 @@ export async function POST(req: NextRequest) {
 	const newUser = await prisma.user.create({
 		data: {
 			stackAuthId,
-			name,
+			firstName,
+			lastName,
 			avatar,
 			username,
 			email,
@@ -69,7 +71,8 @@ export async function PATCH(req: NextRequest) {
 	const {
 		user_ID,
 		stackAuthId,
-		name,
+		firstName,
+		lastName,
 		avatar,
 		username,
 		email,
@@ -86,7 +89,8 @@ export async function PATCH(req: NextRequest) {
 			where: {user_ID, OR: [{stackAuthId}, {email}]},
 			data: {
 				stackAuthId,
-				name,
+				firstName,
+				lastName,
 				avatar,
 				username,
 				email,

@@ -42,10 +42,10 @@ export const LeftMenu = ({children}: Props) => {
 							<div className="submenu-content">
 								<ul>
 									<li>
-										<Link href="/auth">Sign-In</Link>
+										<Link href="/login">Sign-In</Link>
 									</li>
 									<li>
-										<Link href="/auth">Sign-Up</Link>
+										<Link href="/register">Sign-Up</Link>
 									</li>
 								</ul>
 							</div>
