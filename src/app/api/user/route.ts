@@ -29,7 +29,6 @@ export async function POST(req: NextRequest) {
 		avatar,
 		username,
 		email,
-		password,
 		lastLogin,
 		languageID,
 		defaultAddressID
@@ -50,7 +49,6 @@ export async function POST(req: NextRequest) {
 			avatar,
 			username,
 			email,
-			password,
 			lastLogin,
 			languageID,
 			defaultAddressID
@@ -76,7 +74,6 @@ export async function PATCH(req: NextRequest) {
 		avatar,
 		username,
 		email,
-		password,
 		lastLogin,
 		languageID,
 		defaultAddressID
@@ -94,7 +91,6 @@ export async function PATCH(req: NextRequest) {
 				avatar,
 				username,
 				email,
-				password,
 				lastLogin,
 				languageID,
 				defaultAddressID

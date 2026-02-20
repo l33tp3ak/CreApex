@@ -12,7 +12,7 @@
 	"dependencies": {
 		"@prisma/adapter-neon": "^7.3.0",
 		"@prisma/client": "^7.4.0",
-		"@stackframe/stack": "^2.8.65",
+		"@stackframe/stack": "^2.8.70",
 		"bcrypt": "^6.0.0",
 		"dotenv": "^17.2.3",
 		"express": "^5.2.1",

@@ -1,6 +1,8 @@
 
 'use client';
 
+import { StackProvider, StackTheme } from "@stackframe/stack";
+import { stackClientApp } from "../stack/client";
 import type {Metadata} from "next";
 //import {Geist, Geist_Mono} from "next/font/google";
 import '@/app/assets/CSS/style.css';
@@ -55,16 +57,20 @@ export default function RootLayout({
 		<html lang="en">
 			<body>
 				<div id="Home"></div>
-				<Menu>
-					<LeftMenu></LeftMenu>
-				</Menu>
-				{children}
-				<TopArrow />
-				{/*
-				 * Pour plus tard, lorsque notre architecture est en place.
-				 * <Contacts />
-				 * */}
+				<StackProvider app={stackClientApp}>
+					<StackTheme>
+						<Menu>
+							<LeftMenu></LeftMenu>
+						</Menu>
+						{children}
+						<TopArrow />
+						{/*
+						* Pour plus tard, lorsque notre architecture est en place.
+						* <Contacts />
+						* */}
 
+						</StackTheme>
+					</StackProvider>
 			</body>
 		</html>
 	);

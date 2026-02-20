@@ -16,16 +16,15 @@ datasource db {
 model User {
 	user_ID							String					@id @default(uuid())
 	stackAuthId						String?				@unique // ID de Stack Auth
-	firstName						String
-	lastName							String
+	firstName						String?
+	lastName							String?
 	avatar								String?
-	username							String					@unique
+	username							String?				@unique
 	email								String					@unique
-	password							String
 	createdAt						DateTime				@default(now())
 	updatedAt						DateTime				@updatedAt
 //updated through a function at login
-	lastLogin							DateTime	
+	lastLogin							DateTime?	
 	role								Role					@default(USER)
 	
 //Relations
