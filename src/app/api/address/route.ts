@@ -46,7 +46,7 @@ export async function PATCH(req: NextRequest) {
 	const body = await req.json();
 	const {address_ID, streetNumber, streetName, postalCode, countryID, regionID} = body;
 
-	let addressToUpdate: type;
+	let addressToUpdate;
 
 	try {
 		addressToUpdate = await prisma.address.update({
