@@ -37,7 +37,7 @@ export async function POST(req: NextRequest) {
 			data: {quantity, modelID, rqNumberID}
 		});
 	} catch (exception) {
-		return ("An error has occured: " + exception);
+		return NextResponse.json({ message: `An error has occured: ${e}` });
 	}
 
 
@@ -63,7 +63,7 @@ export async function PATCH(req: NextRequest) {
 			data: {quantity, modelID, rqNumberID, status}
 		});
 	} catch (e) {
-		return ("An error has occured: " + e);
+		return NextResponse.json({ message: `An error has occured: ${e}` });
 	}
 
 
@@ -94,7 +94,7 @@ export async function DELETE(req: NextRequest) {
 		});
 	} catch (e) {
 		console.log("An error has occured: " + e);
-		return ("An error has occured: " + e);
+		return NextResponse.json({ message: `An error has occured: ${e}` });
 	}
 
 

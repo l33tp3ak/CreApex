@@ -98,7 +98,7 @@ export async function PATCH(req: NextRequest) {
 		});
 	} catch (e) {
 		console.log("An error has occured: " + e);
-		return ("An error has occured: " + e);
+		return NextResponse.json({ message: `An error has occured: ${e}` });
 	}
 
 
@@ -125,7 +125,7 @@ export async function DELETE(req: NextRequest) {
 		});
 	} catch (e) {
 		console.log("An error has occured: " + e);
-		return ("An error has occured: " + e);
+		return NextResponse.json({ message: `An error has occured: ${e}` });
 	}
 
 
