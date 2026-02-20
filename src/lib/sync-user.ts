@@ -14,7 +14,7 @@ export async function syncUserWithDatabase() {
 	
 	const stackAuthId = user.id;
 	const email = user.primaryEmail;
-	const name = user.displayName;
+	const username = user.displayName;
 	const avatar = user.profileImageUrl;
 	
 	
@@ -23,13 +23,13 @@ export async function syncUserWithDatabase() {
 		where: {stackAuthId: user.id},
 		update: {
 			email: user.primaryEmail || "",
-			name: user.displayName || "",
+			username: user.displayName || "",
 			avatar: user.profileImageUrl || "",
 		},
 		create: {
 			stackAuthId: stackAuthId,
 			email: email || "",
-			name: user.displayName || "",
+			username: user.displayName || "",
 			avatar: user.profileImageUrl || "",
 		}
 	})
