@@ -37,7 +37,7 @@ export async function POST(req: NextRequest) {
 			data: {quantity, modelID, rqNumberID}
 		});
 	} catch (exception) {
-		return NextResponse.json({ message: `An error has occured: ${e}` });
+		return NextResponse.json({ message: `An error has occured: ${exception}` });
 	}
 
 
