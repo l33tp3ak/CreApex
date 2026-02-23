@@ -1,8 +1,13 @@
 
 // src/app/handler/[...stack]/page.tsx
-import { StackHandler } from "@stackframe/stack";
-import { stackServerApp } from "@/lib/stack";
+import {StackProvider, StackHandler} from "@stackframe/stack";
+import {stackServerApp} from "@/lib/stack";
+import {stackClientApp} from "@/stack/client";
 
 export default function Handler(props: any) {
-  return <StackHandler app={stackServerApp} {...props} />;
+	return (
+		<StackProvider app={stackClientApp}>
+			<StackHandler app={stackServerApp} {...props} />
+		</StackProvider>
+	);
 }

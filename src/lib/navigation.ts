@@ -7,7 +7,7 @@
 
 
 
-export function showTopArrow() {
+export async function showTopArrow() {
 	let topArrow = document.getElementById("topArrow");
 	let arrowArea = document.getElementById("arrowArea");
 	if (!topArrow) {

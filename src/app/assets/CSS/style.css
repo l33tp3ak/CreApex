@@ -50,10 +50,13 @@ body {
 		margin:0;
 		padding: 0;
 		font-family: "Yugioh", Arial, Helvetica, sans-serif;
+		/*
 		background-image: url("../images/Bohrok-KalBackground2.jpg");
 		background-repeat: no-repeat;
 		background-attachment: fixed;
 		background-size: cover;
+		*/
+		background-color: #c7c7c7;
 }
 
 input {

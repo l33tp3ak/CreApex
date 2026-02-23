@@ -12,11 +12,12 @@
 import prisma from "@/lib/prisma";
 import {NextRequest, NextResponse} from "next/server";
 import {Role} from "@/generated/prisma/client";
+import bcrypt from "bcryptjs";
 
 export async function GET() {
-	//Get all the data from the Note table in the database
-	const notes = await prisma.user.findMany();
-	return NextResponse.json(notes);
+	//Get all the data from the User table in the database
+	const user = await prisma.user.findMany();
+	return NextResponse.json(user);
 }
 
 export async function POST(req: NextRequest) {
@@ -28,6 +29,7 @@ export async function POST(req: NextRequest) {
 		lastName,
 		avatar,
 		username,
+		password,
 		email,
 		lastLogin,
 		languageID,
@@ -35,11 +37,22 @@ export async function POST(req: NextRequest) {
 	} = body;
 
 	/*
-	//Check if the user has a specified role, just in case, and if it does not, assign the default role
+	Check if the user has a specified role, just in case, and if it does not, assign the default role
 	if (!role) {
 		role = Role.USER;
 	}
-	*/
+	 */
+
+	const existingUser = await prisma.user.findUnique({
+		where: {email}
+	});
+	if (existingUser) {
+		return NextResponse.json({message: "User already exists"}, {status: 400});
+	}
+
+	// Encrypting the password before saving it to the database
+	const hashedPassword = await bcrypt.hash(password, 10);
+
 
 	const newUser = await prisma.user.create({
 		data: {
@@ -48,6 +61,7 @@ export async function POST(req: NextRequest) {
 			lastName,
 			avatar,
 			username,
+			password: hashedPassword,
 			email,
 			lastLogin,
 			languageID,
@@ -56,7 +70,7 @@ export async function POST(req: NextRequest) {
 	});
 
 
-	return NextResponse.json(newUser, {status: 201});
+	return NextResponse.json({message: `User created sucessfully: ${newUser}`}, {status: 201});
 }
 
 
@@ -74,6 +88,7 @@ export async function PATCH(req: NextRequest) {
 		avatar,
 		username,
 		email,
+		password,
 		lastLogin,
 		languageID,
 		defaultAddressID
@@ -91,6 +106,7 @@ export async function PATCH(req: NextRequest) {
 				avatar,
 				username,
 				email,
+				password,
 				lastLogin,
 				languageID,
 				defaultAddressID
@@ -98,7 +114,7 @@ export async function PATCH(req: NextRequest) {
 		});
 	} catch (e) {
 		console.log("An error has occured: " + e);
-		return NextResponse.json({ message: `An error has occured: ${e}` });
+		return NextResponse.json({message: `An error has occured: ${e}`});
 	}
 
 
@@ -125,10 +141,41 @@ export async function DELETE(req: NextRequest) {
 		});
 	} catch (e) {
 		console.log("An error has occured: " + e);
-		return NextResponse.json({ message: `An error has occured: ${e}` });
+		return NextResponse.json({message: `An error has occured: ${e}`});
 	}
 
 
 
 	return NextResponse.json(userToDelete, {status: 201});
+}
+
+
+
+
+
+
+// Other functions
+
+export async function findUser(req: NextRequest) {
+	//const { id } = req.;
+	//Extract from the body of the request
+	const body = await req.json();
+	const {user_ID, stackAuthId, email} = body;
+
+
+	let userToFind;
+	//Get the data from the User table in the database for our user
+	try {
+
+		userToFind = await prisma.user.findUniqueOrThrow({
+			where: {user_ID, OR: [{stackAuthId}, {email}]}
+		});
+	} catch (e) {
+		console.log("An error has occured: " + e);
+		return NextResponse.json({error: 'User does not exist'}, {status: 401});
+	}
+
+
+
+	return NextResponse.json(userToFind);
 }

@@ -1,15 +1,15 @@
 
 'use client';
 
-import { StackProvider, StackTheme } from "@stackframe/stack";
-import { stackClientApp } from "../stack/client";
+import {StackProvider, StackTheme} from "@stackframe/stack";
+import {stackClientApp} from "../stack/client";
 import type {Metadata} from "next";
 //import {Geist, Geist_Mono} from "next/font/google";
 import '@/app/assets/CSS/style.css';
 import {showTopArrow} from "@/lib/navigation";
 import React from "react";
 import {TopArrow} from "./components/TopArrow";
-import {Contacts} from "./components/Contacts";
+//import {Contacts} from "./components/Contacts";
 import {Menu} from "./components/Menu";
 import {LeftMenu} from "./components/LeftMenu";
 //import UpWhiteArrowOcreCircle from "@/app/assets/images/UpWhiteArrowOcreCircle.png";
@@ -57,20 +57,20 @@ export default function RootLayout({
 		<html lang="en">
 			<body>
 				<div id="Home"></div>
-				<StackProvider app={stackClientApp}>
-					<StackTheme>
-						<Menu>
-							<LeftMenu></LeftMenu>
-						</Menu>
-						{children}
-						<TopArrow />
-						{/*
-						* Pour plus tard, lorsque notre architecture est en place.
-						* <Contacts />
-						* */}
+				<Menu>
+					<LeftMenu></LeftMenu>
+				</Menu>
 
-						</StackTheme>
-					</StackProvider>
+				<div>
+					<main>
+						{children}
+					</main>
+				</div>
+				<TopArrow />
+				{/*
+				Pour plus tard, lorsque notre architecture est en place.
+				<Contacts />
+				*/}
 			</body>
 		</html>
 	);

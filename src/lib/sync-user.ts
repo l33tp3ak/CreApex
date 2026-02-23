@@ -25,6 +25,7 @@ export async function syncUserWithDatabase() {
 			email: user.primaryEmail || "",
 			username: user.displayName || "",
 			avatar: user.profileImageUrl || "",
+			
 		},
 		create: {
 			stackAuthId: stackAuthId,
@@ -32,7 +33,7 @@ export async function syncUserWithDatabase() {
 			username: user.displayName || "",
 			avatar: user.profileImageUrl || "",
 		}
-	})
+	});
 
 	return notreUser;
 }

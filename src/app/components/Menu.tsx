@@ -16,7 +16,7 @@ type Props = {
 
 //
 export const Menu = ({children}: Props) => {
-	const [count, setCount] = React.useState(0)
+	
 
 	return (
 		<>
