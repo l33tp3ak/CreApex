@@ -13,26 +13,14 @@ interface LoginBody {
 	password: string;
 }
 
-const fetchUsers = async () => {
-	/*
-	Whenever we use "fetch()", we are accessing the backend
-	Here, we are specifically accessing "/api/notes" to obtain the content of our Notes table on the database
-	*/
-	const response = await fetch("/api/user");
-	const data = await response.json();
-
-	setUser(data);
-};
-
-
-
+/*
 export const login = (
 	req: Request<{}, {}, LoginBody>,
 	res: Response
 ): void => {
 	const {email, password} = req.body;
 
-	// Dans un vrai projet → vérifier en base de données
+	
 	if (email !== "test@example.com" || password !== "123456") {
 		res.status(401).json({message: "Identifiants invalides"});
 		return;
@@ -53,3 +41,4 @@ export const login = (
 
 	res.json({token});
 };
+*/
