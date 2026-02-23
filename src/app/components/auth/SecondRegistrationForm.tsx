@@ -7,9 +7,7 @@ import {redirect} from "next/navigation";
 import {useEffect, useState} from "react";
 import {User} from "@/generated/prisma/client";
 import {language as primaryLanguage} from "@/lib/language";
-import {useUser} from "@stackframe/stack";
 import jwt from "jsonwebtoken";
-import {useRef} from "react";
 
 
 export default function SecondRegistrationForm() {
@@ -209,7 +207,7 @@ export default function SecondRegistrationForm() {
 						<label htmlFor="password">Password: </label>
 						<input
 							id="password"
-							type='text'
+							type='password'
 							placeholder='Enter your Password...'
 							onChange={
 								(e) => setPassword(e.target.value)

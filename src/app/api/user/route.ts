@@ -12,7 +12,9 @@
 import prisma from "@/lib/prisma";
 import {NextRequest, NextResponse} from "next/server";
 import {Role} from "@/generated/prisma/client";
+import 'dotenv/config';
 import bcrypt from "bcryptjs";
+import jwt from "jsonwebtoken";
 
 export async function GET() {
 	//Get all the data from the User table in the database
@@ -68,9 +70,18 @@ export async function POST(req: NextRequest) {
 			defaultAddressID
 		}
 	});
+	
+	// G n r e r le token
+	const token = jwt.sign(
+	{userId: newUser.user_ID, 
+	email: newUser.email, 
+	role: newUser.role},
+	process.env.JWT_SECRET as string,
+	{expiresIn: "10h"}
+	);
 
 
-	return NextResponse.json({message: `User created sucessfully: ${newUser}`}, {status: 201});
+	return NextResponse.json({token, message: `User created sucessfully: ${newUser.email}, ${newUser.firstName} ${newUser.lastName}`, }, {status: 201});
 }
 
 
