@@ -70,14 +70,16 @@ export async function POST(req: NextRequest) {
 			defaultAddressID
 		}
 	});
-	
+
 	// G n r e r le token
 	const token = jwt.sign(
-	{userId: newUser.user_ID, 
-	email: newUser.email, 
-	role: newUser.role},
-	process.env.JWT_SECRET as string,
-	{expiresIn: "10h"}
+		{
+			user_ID: newUser.user_ID,
+			email: newUser.email,
+			role: newUser.role
+		},
+		process.env.JWT_SECRET as string,
+		{expiresIn: "10h"}
 	);
 
 
@@ -164,29 +166,40 @@ export async function DELETE(req: NextRequest) {
 
 
 
-
 // Other functions
+//findUser using fields from the database with the @unique property 
 
-export async function findUser(req: NextRequest) {
-	//const { id } = req.;
-	//Extract from the body of the request
-	const body = await req.json();
-	const {user_ID, stackAuthId, email} = body;
+export async function findUser(searchParam: string) {
 
 
 	let userToFind;
 	//Get the data from the User table in the database for our user
 	try {
-
-		userToFind = await prisma.user.findUniqueOrThrow({
-			where: {user_ID, OR: [{stackAuthId}, {email}]}
+		userToFind = await prisma.user.findUnique({
+			where: {user_ID: String(searchParam)}
 		});
+
+		if (!userToFind) {
+			userToFind = await prisma.user.findUnique({
+				where: {stackAuthId: String(searchParam)}
+			});
+		}
+
+		if (!userToFind) {
+			userToFind = await prisma.user.findUnique({
+				where: {email: String(searchParam)}
+			});
+		}
+		console.log(userToFind);
+
 	} catch (e) {
 		console.log("An error has occured: " + e);
-		return NextResponse.json({error: 'User does not exist'}, {status: 401});
+		return NextResponse.json({message: `An error has occured: ${e}`, success: false}, {status: 400});
 	}
 
+	if (!userToFind) {
+		return NextResponse.json({message: `User does not exist`, success: false}, {status: 404});
+	}
 
-
-	return NextResponse.json(userToFind);
+	return NextResponse.json({userToFind, success: true}, {status: 201});
 }

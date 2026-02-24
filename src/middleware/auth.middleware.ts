@@ -6,39 +6,42 @@
 
 import prisma from "@/lib/prisma";
 import {NextRequest, NextResponse} from "next/server";
+import type {Request, Response, NextFunction} from "express";
 import jwt from "jsonwebtoken";
 
-interface LoginBody {
+interface TokenPayload {
+	user_ID: string;
 	email: string;
-	password: string;
+	role: string;
+	iat?: number;
+	exp?: number;
 }
 
-/*
-export const login = (
-	req: Request<{}, {}, LoginBody>,
-	res: Response
-): void => {
-	const {email, password} = req.body;
 
-	
-	if (email !== "test@example.com" || password !== "123456") {
-		res.status(401).json({message: "Identifiants invalides"});
-		return;
+export const protect = (
+	req: Request,
+	res: Response,
+	next: NextFunction
+) => {
+	const authHeader = req.headers.authorization;
+
+
+	if (!authHeader || !authHeader.startsWith("Bearer")) {
+		return res.status(403).json({message: "Unauthorized"});
 	}
 
-	const token = jwt.sign(
-		{
-			sub: "user_id_123",
-			email: email,
-			role: "user"
-		},
-		process.env.JWT_SECRET as string,
-		{
-			expiresIn: process.env.JWT_EXPIRES_IN,
-			issuer: "api.monapp.com"
-		}
-	);
+	const token = authHeader.split(" ")[1];
 
-	res.json({token});
+	try {
+		const decoded = jwt.verify(
+			token,
+			process.env.JWT_SECRET as string
+		) as TokenPayload;
+
+		req.user = decoded; // Ajout sur req.user
+
+		next();
+	} catch (error) {
+		res.status(401).json({error: "Token invalide ou expiré"});
+	}
 };
-*/

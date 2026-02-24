@@ -80,7 +80,7 @@ export default function SecondRegistrationForm() {
 				body: formData,
 			});
 			console.log(avatarPath);
-			
+
 			if (avatarPath.body) {
 				avatarPath = await avatarPath.json();
 				console.log(avatarPath);
@@ -155,6 +155,11 @@ export default function SecondRegistrationForm() {
 					</div>
 
 
+					{/*
+					The "type='file'" attribute means that the user can upload a file.
+					The "accept='image/*'"   attribute means that only upload images are accepted.
+					It is also possible to restrict the type of files accepted to specific extensions.
+					*/}
 					<div>
 						<label htmlFor="avatar">Avatar: </label>
 						<input

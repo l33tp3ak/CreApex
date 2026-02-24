@@ -13,7 +13,6 @@ import {NextRequest, NextResponse} from "next/server";
 
 export async function POST(req: NextRequest) {
 	const formData = await req.formData();
-	const chunks = [];
 
 	const file = formData.get("file") as File;
 	const arrayBuffer = await file.arrayBuffer();

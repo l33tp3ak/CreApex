@@ -9,45 +9,58 @@ import {useEffect, useState} from 'react';
 //import fs from "fs";
 
 
-/*
-
-const findUser = (user: String) => {
-	const id = user;
-	const userToFind = await prisma.club.findUnique({
-		where: {id: Number(id)},
-		include: {president: true, student: true, _count: {select: {student: true}}}
-	});
 
 
-	useEffect(() => {
+
+export default function Home() {
+	const [userToFind, setUserToFind] = useState('');
+	const [userData, setUserData] = useState('');
+
+	const findUser = async (user: String) => {
+		alert(user);
+		const searchParam = user;
+		const queryParam = `/api/user/findUser?` + new URLSearchParams({
+			searchParam: String(searchParam)
+		});
+
+		let response;
+
+		try {
+			const res = await fetch(queryParam);
+			response = await res.json();
+			const {userToFind} = response;
+			console.log(userToFind);
+		} catch (e) {
+			console.log("An error has occured: " + e);
+		}
+
+
+
+
+		//useEffect(() => {
+
+		/*
 		if (typeof navigator !== 'undefined') {
 			// Use navigator.languages for the full list, or navigator.language for the primary
 			//const browserLanguages = navigator.languages || [navigator.language];
 
 			//We will only implement the primary language for now
 			const browserLanguage = navigator.language;
+					//The most preferred language is the first one in the array returned by "navigator.languages						//If we were using it, we would instead use the following:
 
-			
-			//The most preferred language is the first one in the array returned by "navigator.languages"
-			//If we were using it, we would instead use the following:
-			
 			//const primaryLanguage = browserLanguages[0] || 'en';
 			const primaryLanguage = browserLanguage || 'en';
 			setLanguage(primaryLanguage);
 		}
+		*/
 
-	}, []);
-	return language;
-}
-
-*/
-
-export default function Home() {
-	const [userToFind, setUserToFind] = useState('');
+		//}, []);
 
 
+		return response;
+	}
 
-	//const thisUser = findUser(userToFind);
+
 	return (
 		<>
 
@@ -104,13 +117,18 @@ export default function Home() {
 				<br />
 				<br />
 				<br />
-				{/*
-				<form onSubmit={() => {alert(findUser(userToFind))}}>
-					<label htmlFor="firstName">First Name</label>
+				<form onSubmit={async (e) => {
+					//Prevents the page from reloading
+					e.preventDefault();
+					const thisUser = await findUser(userToFind);
+
+					alert(thisUser);
+				}}>
+					<label htmlFor="userToFind">Email</label>
 					<input
-						id="firstName"
-						type='text'
-						placeholder='Enter the user to Find...'
+						id="userToFind"
+						type='email'
+						placeholder='Enter the email of the user to Find...'
 						onChange={
 							(e) => setUserToFind(e.target.value)
 						}
@@ -119,7 +137,43 @@ export default function Home() {
 					/>
 					<button type='submit'>Find</button>
 				</form>
-					*/}
+				<br />
+				<br />
+				<br />
+				<br />
+				<form onSubmit={async (e) => {
+					//Prevents the page from reloading
+					e.preventDefault();
+					const thisUser = await findUser(userToFind);
+
+					alert(thisUser);
+				}}>
+					<div>
+						<label htmlFor="testLoginEmail">Email</label>
+						<input
+							id="testLoginEmail"
+							type='email'
+							placeholder='Enter your email...'
+							onChange={
+								(e) => setUserToFind(e.target.value)
+							}
+							className="w-full p-2 border rounded text-black"
+							required
+						/>
+						<label htmlFor="testLoginPassword">Password</label>
+						<input
+							id="testLoginPassword"
+							type='password'
+							placeholder='Enter your password...'
+							onChange={
+								(e) => setUserToFind(e.target.value)
+							}
+							className="w-full p-2 border rounded text-black"
+							required
+						/>
+					</div>
+					<button type='submit'>Login</button>
+				</form>
 				<br />
 				<br />
 				<br />

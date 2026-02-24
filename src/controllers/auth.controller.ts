@@ -19,35 +19,44 @@ interface LoginBody {
 }
 
 
-/*
 
-export const login = async (req: NextRequest,res: NextResponse) => {
+
+export const login = async (req: NextRequest) => {
 	const {email, password} = await req.json();
-	
-	const isEmailValid = await findUser(email);
 
-	
-	if (!isEmailValid) {
+	const res = await findUser(email);
+
+
+
+	if (!res) {
 		return NextResponse.json({message: "Wrong email or password"}, {status: 401});
 	}
-	const dbPassword = isEmailValid.json();
-	
-	
-	const isValid = await bcrypt.compare(password, dbPassword.)
+	const response = await res.json();
+
+	const {userToFind} = response;
+
+
+	const isValid = await bcrypt.compare(password, userToFind.password);
+	if (!isValid) {
+		return NextResponse.json({message: "Wrong email or password"}, {status: 401});
+	}
 
 	const token = jwt.sign(
 		{
-			sub: "user_id_123",
-			email: email,
-			role: "user"
+			user_ID: userToFind.user_ID,
+			email: userToFind.email,
+			role: userToFind.role
 		},
 		process.env.JWT_SECRET as string,
-		{
-			expiresIn: process.env.JWT_EXPIRES_IN,
-			issuer: "api.monapp.com"
-		}
+		{expiresIn: "10h"}
 	);
 
-	res.json({token});
+	return Response.json({
+		token, user: {
+			user_ID: userToFind.user_ID,
+			email: userToFind.email,
+			role: userToFind.role,
+			username: userToFind.username
+		}
+	});
 };
-*/
