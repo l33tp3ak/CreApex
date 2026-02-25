@@ -25,11 +25,11 @@ export async function POST(req: NextRequest) {
 	const {email, password} = await req.json();
 
 	const res = await findUser(email);
-	//console.log("res");
-	//console.log(res);
+	console.log("res");
+	console.log(res);
 	const response = await res.json();
-	//console.log("response");
-	//console.log(response);
+	console.log("response");
+	console.log(response);
 	const {success} = response;
 
 
