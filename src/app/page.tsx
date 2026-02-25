@@ -4,7 +4,7 @@
 import Image from "next/image";
 import {Menu} from "./components/Menu";
 import {useEffect, useState} from 'react';
-import Login from "./components/auth/Login";
+import {Login} from "./components/auth/Login";
 //filesystem
 //https://nodejs.org/api/fs.html
 //import fs from "fs";
