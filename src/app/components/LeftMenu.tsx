@@ -5,6 +5,7 @@ import '@/app/assets/CSS/menu.css';
 import Link from "next/link";
 import React, {act} from "react";
 import {useEffect, useState, } from 'react';
+import {useRouter} from "next/navigation";
 
 /*
 	* This allows us to put children elements inside of our prop, making it more modular and speeding up development time.
@@ -15,43 +16,51 @@ type Props = {
 	children?: React.ReactNode;
 };
 
+
 /*
-const findUser = (user: String) => {
-	const id
-	const userToFind = await prisma.club.findUnique({
-		where: {id: Number(id)},
-		include: {president: true, student: true, _count: {select: {student: true}}}
-	});
+const isUserLoggedIn = async () => {
+	let loggedIn = false;
+	let role = "";
 
+	try {
+		const res = await fetch("/api/auth/login");
+		const response = await res.json();
+		//console.log(response);
+		const {success} = response;
+		loggedIn = success;
 
-	useEffect(() => {
-		if (typeof navigator !== 'undefined') {
-			// Use navigator.languages for the full list, or navigator.language for the primary
-			//const browserLanguages = navigator.languages || [navigator.language];
-
-			//We will only implement the primary language for now
-			const browserLanguage = navigator.language;
-
-			
-			const primaryLanguage = browserLanguage || 'en';
-			setLanguage(primaryLanguage);
+		if (success) {
+			const {userData} = response;
+			role = userData.role;
+			console.log(userData);
 		}
-
-	}, []);
-	return language;
+		return {loggedIn: loggedIn, role: role};
+	} catch (e) {
+		console.log("An error has occured: " + e);
+		return e;
+	}
 }
 */
 
 
+
+
+
+
+
 //
 export const LeftMenu = ({children}: Props) => {
-	const [loggedIn, setLoggedIn] = useState(false);
-	const [role, setRole] = useState("");
+	const [success, setSuccess] = useState(false);
+	const [userData, setUserData] = useState("");
 
 
+
+
+
+	//Run  the function "fetchUsers()" ONCE on first render
+	/*
 	useEffect(() => {
-		fetch("/api/auth/login")
-			.then(
+		isUserLoggedIn().then(
 				res => res.json()
 					.then(response => {
 						//console.log("response");
@@ -65,17 +74,54 @@ export const LeftMenu = ({children}: Props) => {
 							setRole(userData.role);
 						}
 					})
-			)
+			);
+			response.then(res => res.json().then(response => {
+			setLoggedIn(response.loggedIn);
+			setRole(response.role);
+		}) =>{
+			
+		});
+		setLoggedIn(response)
+		const {userData, success} = userValue;
+		
+		return (() => {
+			
+		});
+	}, []);
+	*/
+
+
+
+	useEffect(() => {
+		fetch("/api/auth/login")
+			.then(
+				res => res.json()
+					.then(response => {
+						//console.log("response");
+						//console.log(response);
+						const {success} = response;
+						setSuccess(success);
+
+						if (success) {
+
+							const {userData} = response;
+							setUserData(userData.role);
+						}
+					})
+			);
 		//console.log("response");
 		//console.log(response);
-	}, [])
+	}, []);
+	
+
+
 
 	//The value of the global variables is only changed by the setters once the "useEfffect()" is completed.
 	//console.log(loggedIn);
 	//console.log(role);
 
 
-	if (loggedIn) {
+	if (success) {
 
 		return (
 			<>

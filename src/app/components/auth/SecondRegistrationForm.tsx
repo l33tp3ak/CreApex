@@ -8,7 +8,6 @@ import {useEffect, useState} from "react";
 import {User} from "@/generated/prisma/client";
 import {language as primaryLanguage} from "@/lib/language";
 import jwt from "jsonwebtoken";
-import router from "next/router";
 
 
 export default function SecondRegistrationForm() {
@@ -40,7 +39,7 @@ const fetchUsers = async () => {
 	setUser(data);
 };
 */
-const router = useRouter();
+	const router = useRouter();
 
 
 	//Run  the function "fetchUsers()" ONCE on first render
@@ -109,7 +108,7 @@ const router = useRouter();
 			//localStorage.setItem('token', token);
 			return router.push('/dashboard');
 		}
-		
+
 
 
 		setFirstName('');
