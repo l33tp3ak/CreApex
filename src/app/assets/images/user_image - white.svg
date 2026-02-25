@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 20010904//EN"
+              "http://www.w3.org/TR/2001/REC-SVG-20010904/DTD/svg10.dtd">
+
+<svg xmlns="http://www.w3.org/2000/svg"
+		width="1.66667in" height="1.66667in"
+		viewBox="0 0 500 500">
+	<circle id="Head" r="125" cx="250" cy="125" fill="#ffffff" />
+	<circle id="Body" r="250" cx="250" cy="500" fill="#ffffff" />
+</svg>

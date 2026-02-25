@@ -1,4 +1,7 @@
 
+"use client";
+
+import {redirect, useRouter} from 'next/navigation';
 import {FormEvent, useState} from 'react';
 //import {useRouter} from 'next/router';
 
@@ -6,56 +9,27 @@ export default function LoginPage() {
 	const [loading, setLoading] = useState(true);
 	const [userToFind, setUserToFind] = useState('');
 	const [userData, setUserData] = useState('');
-	//const router = useRouter()
-	
-	
+	/*
+		As this is a Client Component, we must use "useRouter()" in order to do a redirection.
+		
+		
+		
+		import {redirect} from 'next/navigation';
+		***********************************AND*****************************************************
+		redirect('/dashboard');
+		
+		Are STRICLY reserved for Server Components.
+		While the browser (and even Next.js itself) may understand what we are doing, 
+		it can (AND WILL) result in unexpected, unreliable and undesired behaviours.
+		*/
+	const router = useRouter();
+
+
 	const [userEmail, setUserEmail] = useState('');
 	const [userPassword, setUserPassword] = useState('');
 
 
-	const findUser = async (user: String) => {
-		alert(user);
-		const searchParam = user;
-		const queryParam = `/api/user/findUser?` + new URLSearchParams({
-			searchParam: String(searchParam)
-		});
 
-		let response;
-
-		try {
-			const res = await fetch(queryParam);
-			response = await res.json();
-			setUserData(response)
-			console.log(userData);
-		} catch (e) {
-			console.log("An error has occured: " + e);
-		}
-
-
-
-
-		//useEffect(() => {
-
-		/*
-		if (typeof navigator !== 'undefined') {
-			// Use navigator.languages for the full list, or navigator.language for the primary
-			//const browserLanguages = navigator.languages || [navigator.language];
-
-			//We will only implement the primary language for now
-			const browserLanguage = navigator.language;
-					//The most preferred language is the first one in the array returned by "navigator.languages						//If we were using it, we would instead use the following:
-
-			//const primaryLanguage = browserLanguages[0] || 'en';
-			const primaryLanguage = browserLanguage || 'en';
-			setLanguage(primaryLanguage);
-		}
-		*/
-
-		//}, []);
-
-
-		return response;
-	}
 
 	const loginUser = async (email: String, password: String) => {
 
@@ -78,16 +52,16 @@ export default function LoginPage() {
 			//console.log(response);
 			const {success} = response;
 
-			/*
-			if (success) {
-				const {userData} = response;
-				//console.log(userData);
-				const {token} = response;
-				//localStorage.setItem('token', token);
-				return userData;
-			}
-			*/
 
+			/*
+						if (success) {
+							const {userData} = response;
+							//console.log(userData);
+							const {token} = response;
+							//localStorage.setItem('token', token);
+							return userData;
+						}
+						*/
 			return success;
 		} catch (e) {
 			console.log("An error has occured: " + e);
@@ -104,14 +78,56 @@ export default function LoginPage() {
 				<form onSubmit={async (e) => {
 					//Prevents the page from reloading
 					e.preventDefault();
-					const thisUser = await loginUser(userEmail, userPassword);
+					const loginSuccessful = await loginUser(userEmail, userPassword);
 					let loginFieldError = document.getElementById("loginFieldError");
 
-					if (thisUser) {
+					if (loginSuccessful) {
 						//alert(thisUser);
+
+						/*
 						if (loginFieldError) {
 							loginFieldError.style.display = "none";
 						}
+						*/
+						//THIS is the correct way to do a redirect in a client component:
+						router.push('/dashboard');
+						/*
+							As this uses URLs, we can also exploit the APIs of the application.
+							This means that it is possible to send information for a GET request using the following technique:
+							
+												
+							const findUser = async (user: String) => {
+								alert(user);
+								const searchParam = user;
+								const queryParam = `/api/user/findUser?` + new URLSearchParams({
+									searchParam: String(searchParam)
+								});
+						
+								let response;
+						
+								try {
+									const res = await fetch(queryParam);
+									response = await res.json();
+									console.log(response);
+									const {success} = response;
+						
+									if (success) {
+										const {userData} = response;
+										console.log(userData);
+										return userData;
+									}
+						
+									return success;
+								} catch (e) {
+									console.log("An error has occured: " + e);
+								}
+						
+						
+								return response;
+							}
+												
+							*/
+
 					} else {
 						if (loginFieldError) {
 							loginFieldError.style.display = "block";

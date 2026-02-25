@@ -38,7 +38,6 @@ export default function RegisterPage() {
 
 
 import {stackServerApp} from "@/lib/stack";
-import prisma from "@/lib/prisma";
 import {redirect} from "next/navigation";
 import {User} from "@/generated/prisma/client";
 import {language as primaryLanguage} from "@/lib/language";

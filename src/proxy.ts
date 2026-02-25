@@ -11,7 +11,7 @@ import type {NextRequest} from 'next/server'
 import jwt from "jsonwebtoken";
 
 export async function proxy(request: NextRequest) {
-	const token = request.cookies.get('token')?.value
+	const token = request.cookies.get('token')?.value;
 	//console.log("token");
 	//console.log(token);
 

@@ -11,11 +11,11 @@ export async function GET(req: NextRequest) {
 	In order to extract the value of a specific search paramater, we need to use req.nextUrl.searchParams.get("...")
 	where "..." represents the key of the search paramater that we wish to extract.
 	*/
-	console.log(req);
-	console.log(req.nextUrl.searchParams);
+	//console.log(req);
+	//console.log(req.nextUrl.searchParams);
 	const searchParam = req.nextUrl.searchParams.get("searchParam");
 
-	console.log(searchParam);
+	//console.log(searchParam);
 
 	/*
 	const whereName = searchParam ?
@@ -51,7 +51,7 @@ export async function GET(req: NextRequest) {
 				where: {email: String(searchParam)}
 			});
 		}
-		console.log(userToFind);
+		//console.log(userToFind);
 
 	} catch (e) {
 		console.log("An error has occured: " + e);

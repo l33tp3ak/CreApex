@@ -3,11 +3,12 @@
 'use client';
 
 
-import {redirect} from "next/navigation";
+import {useRouter} from "next/navigation";
 import {useEffect, useState} from "react";
 import {User} from "@/generated/prisma/client";
 import {language as primaryLanguage} from "@/lib/language";
 import jwt from "jsonwebtoken";
+import router from "next/router";
 
 
 export default function SecondRegistrationForm() {
@@ -39,6 +40,8 @@ const fetchUsers = async () => {
 	setUser(data);
 };
 */
+const router = useRouter();
+
 
 	//Run  the function "fetchUsers()" ONCE on first render
 	useEffect(() => {
@@ -50,7 +53,6 @@ const fetchUsers = async () => {
 
 	/*
 	Function responsable de la soumission de l'information vers la base de donnees
-	 
 	*/
 	const formulaire = async (e: React.FormEvent) => {
 		e.preventDefault();
@@ -68,11 +70,11 @@ const fetchUsers = async () => {
 				method: 'POST',
 				body: formData,
 			});
-			console.log(avatarPath);
+			//console.log(avatarPath);
 
 			if (avatarPath.body) {
 				avatarPath = await avatarPath.json();
-				console.log(avatarPath);
+				//console.log(avatarPath);
 				avatarPath = avatarPath.message;
 			}
 
@@ -102,12 +104,12 @@ const fetchUsers = async () => {
 		const {success} = response;
 
 		if (success) {
-			const {token} = response;
+			//const {token} = response;
 			//console.log(userData);
-			localStorage.setItem('token', token);
-			return;
+			//localStorage.setItem('token', token);
+			return router.push('/dashboard');
 		}
-
+		
 
 
 		setFirstName('');

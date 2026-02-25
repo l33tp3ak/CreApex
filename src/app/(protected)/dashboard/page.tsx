@@ -5,6 +5,7 @@
 import {stackServerApp} from "@/lib/stack";
 import {redirect} from "next/navigation";
 
+
 export default function DashboardPage() {
 
 	/*
@@ -27,7 +28,7 @@ export default function DashboardPage() {
 	
 	return (
 		<>
-			<h1>Bienvenue sur le tableau de bord</h1>
+			<h1 className="center">Bienvenue sur le tableau de bord</h1>
 
 		</>
 	);

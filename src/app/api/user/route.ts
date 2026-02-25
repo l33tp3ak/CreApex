@@ -76,25 +76,33 @@ export async function POST(req: NextRequest) {
 		{
 			user_ID: newUser.user_ID,
 			email: newUser.email,
-			role: newUser.role
+			role: newUser.role,
+			username: newUser.username
 		},
 		process.env.JWT_SECRET as string,
-		{expiresIn: "10h"}
+		{expiresIn: '7d'}
 	);
 
-
-	return NextResponse.json(
+	const loginResponse = NextResponse.json(
 		{
-			token,
-			userData: {
-				user_ID: newUser.user_ID,
-				email: newUser.email,
-				role: newUser.role,
-				username: newUser.username
-			}, message: `User created sucessfully: ${newUser.email}, ${newUser.firstName} ${newUser.lastName}`
-			, success: true
+			message: `User created sucessfully: ${newUser.email}, ${newUser.firstName} ${newUser.lastName}`,
+			success: true
 		},
 		{status: 201});
+
+	loginResponse.cookies.set({
+		name: 'token',
+		value: token,
+		httpOnly: true,       //  prevents JS access from the frontend, preventing XSS attacks
+		secure: process.env.NODE_ENV === 'production',
+		sameSite: 'strict',
+		path: '/',
+		maxAge: 60 * 60 * 24 * 7, // 7 days
+	});
+	
+
+
+	return loginResponse;
 }
 
 

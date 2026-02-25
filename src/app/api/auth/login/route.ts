@@ -91,7 +91,7 @@ export async function GET() {
 
 	try {
 		const decoded = await verify(token, process.env.JWT_SECRET!);
-		return NextResponse.json({user: decoded, message: "User is logged in", success: true}, {status: 201});
+		return NextResponse.json({userData: decoded, message: "User is logged in", success: true}, {status: 201});
 	} catch {
 		return NextResponse.json({message: "Invalid token", success: false}, {status: 401});
 	}
