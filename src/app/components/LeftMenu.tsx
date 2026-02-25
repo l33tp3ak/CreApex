@@ -50,8 +50,7 @@ const isUserLoggedIn = async () => {
 
 //
 export const LeftMenu = ({children}: Props) => {
-	const [loggedIn, setLoggedIn] = useState(false);
-	const [role, setRole] = useState("");
+	
 
 	const isUserLoggedIn = async () => {
 

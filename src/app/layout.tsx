@@ -7,7 +7,7 @@ import type {Metadata} from "next";
 //import {Geist, Geist_Mono} from "next/font/google";
 import '@/app/assets/CSS/style.css';
 import {showTopArrow} from "@/lib/navigation";
-import React from "react";
+import React, {useState} from "react";
 import {TopArrow} from "./components/TopArrow";
 //import {Contacts} from "./components/Contacts";
 import {Menu} from "./components/Menu";
@@ -38,6 +38,8 @@ export default function RootLayout({
 }: Readonly<{
 	children: React.ReactNode;
 }>) {
+	const [loggedIn, setLoggedIn] = useState(false);
+	const [role, setRole] = useState("");
 
 	/*
 	 * This allows us to do a check whenever there is a scroll event in the window
