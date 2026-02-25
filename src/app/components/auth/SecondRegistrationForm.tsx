@@ -22,38 +22,27 @@ export default function SecondRegistrationForm() {
 	const [password, setPassword] = useState("");
 
 
+	/*	  * Unfortunately, Stack Auth refuses to redirect properly.	  * No Time, shelved.	  * 		const stackAuthId = stackUser.id;		const avatar = stackUser.profileImageUrl;		const username = stackUser.displayName;		const email = stackUser.primaryEmail;
+		if (!stackUser) {			redirect("/register");			return null;		}		*/
+
+
 
 	/*
-	 * Unfortunately, Stack Auth refuses to redirect properly.
-	 * No Time, shelved.
-	 * 
-	const stackAuthId = stackUser.id;
-	const avatar = stackUser.profileImageUrl;
-	const username = stackUser.displayName;
-	const email = stackUser.primaryEmail;
-	
-	if (!stackUser) {
-		redirect("/register");
-		return null;
-	}
+	Whenever we use "fetch()", we are accessing the backend
+	Here, we are specifically accessing "/api/notes" to obtain the content of our Notes table on the database
 	*/
+	/*
+const fetchUsers = async () => {
+	const response = await fetch("/api/user");
+	const data = await response.json();
 
-
-
-	const fetchUsers = async () => {
-		/*
-		Whenever we use "fetch()", we are accessing the backend
-		Here, we are specifically accessing "/api/notes" to obtain the content of our Notes table on the database
-		*/
-		const response = await fetch("/api/user");
-		const data = await response.json();
-
-		setUser(data);
-	};
+	setUser(data);
+};
+*/
 
 	//Run  the function "fetchUsers()" ONCE on first render
 	useEffect(() => {
-		fetchUsers();
+		//fetchUsers();
 		const languageOfUser = primaryLanguage();
 		setLanguage(languageOfUser);
 	}, []);
@@ -94,7 +83,7 @@ export default function SecondRegistrationForm() {
 
 
 
-		await fetch("/api/user", {
+		const res = await fetch("/api/user", {
 			method: "POST",
 			headers: {
 				"Content-Type": "application/json"
@@ -108,10 +97,22 @@ export default function SecondRegistrationForm() {
 				password
 			})
 		});
+		response = await res.json();
+		//console.log(response);
+		const {success} = response;
+
+		if (success) {
+			const {token} = response;
+			//console.log(userData);
+			localStorage.setItem('token', token);
+			return;
+		}
+
+
 
 		setFirstName('');
 		setLastName('');
-		fetchUsers();
+		//fetchUsers();
 	};
 
 	return (

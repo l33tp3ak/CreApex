@@ -62,5 +62,5 @@ export async function GET(req: NextRequest) {
 		return NextResponse.json({message: `User does not exist`, success: false}, {status: 404});
 	}
 
-	return NextResponse.json({userToFind, success: true}, {status: 201});
+	return NextResponse.json({userData: userToFind, success: true}, {status: 201});
 }

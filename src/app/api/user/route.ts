@@ -83,7 +83,18 @@ export async function POST(req: NextRequest) {
 	);
 
 
-	return NextResponse.json({token, message: `User created sucessfully: ${newUser.email}, ${newUser.firstName} ${newUser.lastName}`, }, {status: 201});
+	return NextResponse.json(
+		{
+			token,
+			userData: {
+				user_ID: newUser.user_ID,
+				email: newUser.email,
+				role: newUser.role,
+				username: newUser.username
+			}, message: `User created sucessfully: ${newUser.email}, ${newUser.firstName} ${newUser.lastName}`
+			, success: true
+		},
+		{status: 201});
 }
 
 
@@ -201,5 +212,5 @@ export async function findUser(searchParam: string) {
 		return NextResponse.json({message: `User does not exist`, success: false}, {status: 404});
 	}
 
-	return NextResponse.json({userToFind, success: true}, {status: 201});
+	return NextResponse.json({userData: userToFind, success: true}, {status: 201});
 }

@@ -4,6 +4,7 @@
 import Image from "next/image";
 import {Menu} from "./components/Menu";
 import {useEffect, useState} from 'react';
+import Login from "./components/auth/Login";
 //filesystem
 //https://nodejs.org/api/fs.html
 //import fs from "fs";
@@ -15,6 +16,10 @@ import {useEffect, useState} from 'react';
 export default function Home() {
 	const [userToFind, setUserToFind] = useState('');
 	const [userData, setUserData] = useState('');
+
+
+	const [userEmail, setUserEmail] = useState('');
+	const [userPassword, setUserPassword] = useState('');
 
 	const findUser = async (user: String) => {
 		alert(user);
@@ -28,8 +33,16 @@ export default function Home() {
 		try {
 			const res = await fetch(queryParam);
 			response = await res.json();
-			const {userToFind} = response;
-			console.log(userToFind);
+			console.log(response);
+			const {success} = response;
+
+			if (success) {
+				const {userData} = response;
+				console.log(userData);
+				return userData;
+			}
+
+			return success;
 		} catch (e) {
 			console.log("An error has occured: " + e);
 		}
@@ -59,6 +72,9 @@ export default function Home() {
 
 		return response;
 	}
+
+
+
 
 
 	return (
@@ -117,63 +133,51 @@ export default function Home() {
 				<br />
 				<br />
 				<br />
-				<form onSubmit={async (e) => {
-					//Prevents the page from reloading
-					e.preventDefault();
-					const thisUser = await findUser(userToFind);
+				<div>
+					<form onSubmit={async (e) => {
+						//Prevents the page from reloading
+						e.preventDefault();
+						const thisUser = await findUser(userToFind);
+						let emailFieldError = document.getElementById("emailFieldError");
 
-					alert(thisUser);
-				}}>
-					<label htmlFor="userToFind">Email</label>
-					<input
-						id="userToFind"
-						type='email'
-						placeholder='Enter the email of the user to Find...'
-						onChange={
-							(e) => setUserToFind(e.target.value)
+						if (thisUser) {
+							alert(thisUser);
+							if (emailFieldError) {
+								emailFieldError.style.display = "none";
+							}
+						} else {
+							if (emailFieldError) {
+								emailFieldError.style.display = "block";
+							}
+							alert("Wrong email or password");
 						}
-						className="w-full p-2 border rounded text-black"
-						required
-					/>
-					<button type='submit'>Find</button>
-				</form>
-				<br />
-				<br />
-				<br />
-				<br />
-				<form onSubmit={async (e) => {
-					//Prevents the page from reloading
-					e.preventDefault();
-					const thisUser = await findUser(userToFind);
 
-					alert(thisUser);
-				}}>
-					<div>
-						<label htmlFor="testLoginEmail">Email</label>
-						<input
-							id="testLoginEmail"
-							type='email'
-							placeholder='Enter your email...'
-							onChange={
-								(e) => setUserToFind(e.target.value)
-							}
-							className="w-full p-2 border rounded text-black"
-							required
-						/>
-						<label htmlFor="testLoginPassword">Password</label>
-						<input
-							id="testLoginPassword"
-							type='password'
-							placeholder='Enter your password...'
-							onChange={
-								(e) => setUserToFind(e.target.value)
-							}
-							className="w-full p-2 border rounded text-black"
-							required
-						/>
-					</div>
-					<button type='submit'>Login</button>
-				</form>
+
+
+					}}>
+
+						<div id="emailField">
+							<label htmlFor="userToFind">Email</label>
+							<input
+								id="userToFind"
+								type='email'
+								placeholder='Enter the email of the user to Find...'
+								onChange={
+									(e) => setUserToFind(e.target.value)
+								}
+								className="w-full p-2 border rounded text-black"
+								required
+							/>
+							<div id="emailFieldError" style={{display: "none", color: "red"}}>Email or password is incorrect</div>
+						</div>
+						<button type='submit'>Find</button>
+					</form>
+				</div>
+				<br />
+				<br />
+				<br />
+				<br />
+				<Login />
 				<br />
 				<br />
 				<br />
