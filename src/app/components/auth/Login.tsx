@@ -48,8 +48,6 @@ export default function LoginPage() {
 				})
 			});
 			response = await res.json();
-			console.log("response");
-			console.log(response);
 			const {success} = response;
 
 
@@ -92,8 +90,6 @@ export default function LoginPage() {
 					if (loginEmail && loginPassword) {
 						loginSuccessful = await loginUser(loginEmail.toString(), loginPassword.toString());
 					}
-					console.log(userEmail);
-					console.log(userPassword);
 				let loginFieldError = document.getElementById("loginFieldError");
 
 				if (loginSuccessful) {
