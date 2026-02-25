@@ -4,7 +4,7 @@
 import {redirect, useRouter} from 'next/navigation';
 import {useEffect, useState} from 'react';
 
-export default async function secondRegistrationForm() {
+export default function logoutPage() {
 	const [userEmail, setUserEmail] = useState('');
 	const [userPassword, setUserPassword] = useState('');
 	

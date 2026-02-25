@@ -133,7 +133,7 @@
 
 .logout {
 		background-color:#f41e14;
-	
+	transition: background-color .5s, color .5s;
 }
 
 
@@ -194,6 +194,12 @@
 		transition: background-color .5s;
 }
 
+.navBar ul li  a.logout:hover, .submenu:hover .mbutton .logout, .submenu2:hover .mbutton2 .logout {
+		/* Change background colour. */
+		background-color: #f6453c;
+		transition: background-color .5s;
+}
+
 /* 
 	When the javascript event "hover" occurs on the elements, the following style is applied.
 	This is separate so that only when the specific element is hovered does it apply
@@ -210,6 +216,14 @@
 .navBar ul li a:active, .mbutton:active, .mbutton2:active {
 		/* Change background colour. */
 		background-color: #02b342;
+		transition: background-color .2s;
+}
+
+
+/* When a link is clicked on, apply this style	*/
+.navBar ul li a.logout:active, .mbutton.logout:active, .mbutton2.logout:active {
+		/* Change background colour. */
+		background-color: #db150a;
 		transition: background-color .2s;
 }
 
