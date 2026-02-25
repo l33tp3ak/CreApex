@@ -88,9 +88,12 @@ export default function LoginPage() {
 					if (loginPassword) {
 						setUserPassword(loginPassword.toString())
 					}
+					let loginSuccessful;
+					if (loginEmail && loginPassword) {
+						loginSuccessful = await loginUser(loginEmail.toString(), loginPassword.toString());
+					}
 					console.log(userEmail);
 					console.log(userPassword);
-				const loginSuccessful = await loginUser(userEmail, userPassword);
 				let loginFieldError = document.getElementById("loginFieldError");
 
 				if (loginSuccessful) {
