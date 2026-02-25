@@ -65,7 +65,7 @@ export const LeftMenu = ({children}: Props) => {
 							setRole(userData.role);
 						}
 					})
-			);
+			)
 		//console.log("response");
 		//console.log(response);
 	}, [])
@@ -73,10 +73,7 @@ export const LeftMenu = ({children}: Props) => {
 	//The value of the global variables is only changed by the setters once the "useEfffect()" is completed.
 	//console.log(loggedIn);
 	//console.log(role);
-	act(() => {
-		console.log(loggedIn);
-		console.log(role);
-	});
+
 
 	if (loggedIn) {
 
