@@ -1,6 +1,6 @@
 
 // src/app/(auth)/login/page.tsx
-
+'use client';
 import {StackProvider, StackTheme} from "@stackframe/stack";
 import {stackClientApp} from "@/stack/client";
 import {SignIn} from "@stackframe/stack";
