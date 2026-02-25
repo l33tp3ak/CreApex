@@ -2,7 +2,7 @@
 import {FormEvent, useState} from 'react';
 //import {useRouter} from 'next/router';
 
-export default function LoginPage() {
+export default function Login() {
 	const [loading, setLoading] = useState(true);
 	const [userToFind, setUserToFind] = useState('');
 	const [userData, setUserData] = useState('');
