@@ -244,6 +244,9 @@ model Modele3DImages {
 model Material {
 	material_ID						Int					@id @default(autoincrement())
 	name								String					@unique
+//PLA+ => blue
+//PLA+ => rouge
+//PLA+ => Orange
 	
 	createdAt						DateTime			@default(now())
 	updatedAt						DateTime			@default(now())

@@ -48,8 +48,8 @@ export default function LoginPage() {
 				})
 			});
 			response = await res.json();
-			//console.log("response");
-			//console.log(response);
+			console.log("response");
+			console.log(response);
 			const {success} = response;
 
 
