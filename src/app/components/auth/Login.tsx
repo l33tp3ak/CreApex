@@ -75,94 +75,108 @@ export default function LoginPage() {
 	return (
 		<div>
 			<div>
-				<form onSubmit={async (e) => {
+				<form name="loginForm" action=".../api/auth/login/" onSubmit={async (e) => {
 					//Prevents the page from reloading
+
 					e.preventDefault();
-					const loginSuccessful = await loginUser(userEmail, userPassword);
-					let loginFieldError = document.getElementById("loginFieldError");
+					const loginForm = new FormData(e.target);
+					const loginEmail = loginForm.get("loginEmail");
+					const loginPassword = loginForm.get("loginPassword");
+					if (loginEmail) {
+						setUserEmail(loginEmail.toString())
+					}
+					if (loginPassword) {
+						setUserPassword(loginPassword.toString())
+					}
+					console.log(userEmail);
+					console.log(userPassword);
+				const loginSuccessful = await loginUser(userEmail, userPassword);
+				let loginFieldError = document.getElementById("loginFieldError");
 
-					if (loginSuccessful) {
-						//alert(thisUser);
+				if (loginSuccessful) {
+					//alert(thisUser);
 
-						/*
-						if (loginFieldError) {
-							loginFieldError.style.display = "none";
-						}
-						*/
-						//THIS is the correct way to do a redirect in a client component:
-						router.push('/dashboard');
+					/*
+					if (loginFieldError) {
+						loginFieldError.style.display = "none";
+					}
+					*/
+					//THIS is the correct way to do a redirect in a client component:
+					router.push('/dashboard');
 						/*
 							As this uses URLs, we can also exploit the APIs of the application.
 							This means that it is possible to send information for a GET request using the following technique:
-							
-												
+
+
 							const findUser = async (user: String) => {
-								alert(user);
-								const searchParam = user;
-								const queryParam = `/api/user/findUser?` + new URLSearchParams({
-									searchParam: String(searchParam)
+					alert(user);
+				const searchParam = user;
+				const queryParam = `/api/user/findUser?` + new URLSearchParams({
+					searchParam: String(searchParam)
 								});
-						
-								let response;
-						
-								try {
+
+				let response;
+
+				try {
 									const res = await fetch(queryParam);
-									response = await res.json();
-									console.log(response);
-									const {success} = response;
-						
-									if (success) {
+				response = await res.json();
+				console.log(response);
+				const {success} = response;
+
+				if (success) {
 										const {userData} = response;
-										console.log(userData);
-										return userData;
+				console.log(userData);
+				return userData;
 									}
-						
-									return success;
+
+				return success;
 								} catch (e) {
-									console.log("An error has occured: " + e);
+					console.log("An error has occured: " + e);
 								}
-						
-						
-								return response;
+
+
+				return response;
 							}
-												
-							*/
+
+				*/
 
 					} else {
 						if (loginFieldError) {
-							loginFieldError.style.display = "block";
+					loginFieldError.style.display = "block";
 						}
 						//alert("Wrong email or password");
 					}
 				}}>
-					<div>
-						<label htmlFor="loginEmail">Email</label>
-						<input
-							id="loginEmail"
-							type='email'
-							placeholder='Email...'
-							onChange={
-								(e) => setUserEmail(e.target.value)
-							}
-							className="w-full p-2 border rounded text-black"
-							required
-						/>
-						<label htmlFor="loginPassword">Password</label>
-						<input
-							id="loginPassword"
-							type='password'
-							placeholder='Password...'
-							onChange={
-								(e) => setUserPassword(e.target.value)
-							}
-							className="w-full p-2 border rounded text-black"
-							required
-						/>
-						<div id="loginFieldError" style={{display: "none", color: "red"}}>Email or password is incorrect</div>
-					</div>
-					<button type='submit'>Login</button>
-				</form>
-			</div>
+				<div>
+					<label htmlFor="loginEmail">Email</label>
+					<input
+						name="loginEmail"
+						id="loginEmail"
+						type='email'
+						placeholder='Email...'
+						onChange={
+							(e) => setUserEmail(e.target.value)
+						}
+						className="w-full p-2 border rounded text-black"
+						required
+					/>
+					<label htmlFor="loginPassword">Password</label>
+					<input
+						name="loginPassword"
+						id="loginPassword"
+						type='password'
+						placeholder='Password...'
+						onChange={
+							(e) => setUserPassword(e.target.value)
+						}
+						className="w-full p-2 border rounded text-black"
+						required
+					/>
+					<div id="loginFieldError" style={{display: "none", color: "red"}}>Email or password is incorrect</div>
+				</div>
+				<button type='submit'>Login</button>
+			</form>
 		</div>
+		</div >
 	);
 }

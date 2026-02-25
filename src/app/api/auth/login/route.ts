@@ -23,6 +23,8 @@ interface LoginBody {
 
 export async function POST(req: NextRequest) {
 	const {email, password} = await req.json();
+	
+	console.log("req");
 
 	const res = await findUser(email);
 	console.log("res");
