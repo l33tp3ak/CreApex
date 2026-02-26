@@ -5,6 +5,7 @@ import Image from "next/image";
 import {Menu} from "./components/Menu";
 import {useEffect, useState} from 'react';
 import Login from "./components/auth/Login";
+import {AuthProvider, useAuth} from "./components/AuthContext";
 //filesystem
 //https://nodejs.org/api/fs.html
 //import fs from "fs";
@@ -20,6 +21,10 @@ export default function Home() {
 
 	const [userEmail, setUserEmail] = useState('');
 	const [userPassword, setUserPassword] = useState('');
+
+	const {role, setRole, loggedIn, setLoggedIn} = useAuth();
+
+
 
 	const findUser = async (user: String) => {
 		alert(user);
@@ -79,7 +84,6 @@ export default function Home() {
 
 	return (
 		<>
-
 			{/*
 			This is a multi-line comment
 			*/}
@@ -211,7 +215,6 @@ export default function Home() {
 					<p>Here is where I can put in content about the Level 5 and Machine Learning, the dangerous adaptative AIs.</p>
 				</section>
 			</div>
-
 		</>
 	);
 }

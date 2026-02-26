@@ -130,7 +130,7 @@ export async function PATCH(req: NextRequest) {
 
 	try {
 		userToUpdate = await prisma.user.update({
-			where: {user_ID, OR: [{stackAuthId}, {email}]},
+			where: {email},
 			data: {
 				stackAuthId,
 				firstName,
@@ -168,8 +168,11 @@ export async function DELETE(req: NextRequest) {
 	let userToDelete;
 
 	try {
+		const userData = await findUser(user_ID)
+		
+		
 		userToDelete = await prisma.user.delete({
-			where: {user_ID, OR: [{stackAuthId}, {email}]}
+			where: {email}
 		});
 	} catch (e) {
 		console.log("An error has occured: " + e);

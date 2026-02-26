@@ -1,11 +1,14 @@
 
 
+"use client"
+
 import '@/app/assets/CSS/menu.css';
 //import {useLocation} from "react-router-dom";
 import Link from "next/link";
 import React, {act} from "react";
 import {useEffect, useState, } from 'react';
 import {useRouter} from "next/navigation";
+import {AuthProvider, useAuth} from './AuthContext';
 
 /*
 	* This allows us to put children elements inside of our prop, making it more modular and speeding up development time.
@@ -18,39 +21,13 @@ type Props = {
 
 
 
-const isUserLoggedIn = async () => {
-	let loggedIn = false;
-	let role = "";
-
-	try {
-		const res = await fetch("/api/auth/login");
-		const response = await res.json();
-		//console.log(response);
-		const {success} = response;
-		loggedIn = success;
-
-		if (success) {
-			const {userData} = response;
-			role = userData.role;
-			console.log(userData);
-		}
-		return {loggedIn: loggedIn, role: role};
-	} catch (e) {
-		console.log("An error has occured: " + e);
-		return e;
-	}
-}
-
-
-
-
-
 
 
 
 //
 export const LeftMenu = ({children}: Props) => {
-	
+	const {role, setRole, loggedIn, setLoggedIn} = useAuth();
+
 
 	const isUserLoggedIn = async () => {
 
@@ -62,27 +39,24 @@ export const LeftMenu = ({children}: Props) => {
 			//loggedIn = success;
 			setLoggedIn(success)
 
+			let responseRole;
 			if (success) {
 				const {userData} = response;
 				//role = userData.role;
+				responseRole = userData.role;
 				setRole(userData.role);
 				console.log(userData);
 			}
-			return {loggedIn: loggedIn, role: role};
+			return {loggedIn: success, role: responseRole};
 		} catch (e) {
 			console.log("An error has occured: " + e);
 			return e;
 		}
 	}
-
-	React.useEffect(() => {
-		window.addEventListener('load', isUserLoggedIn);
-
-		// Cleanup function to remove the event listener
-		return () => {
-			window.removeEventListener('load', isUserLoggedIn);
-		};
-	}, []);		// Empty dependency array ensures it runs once on mount
+	
+	const logoutUser = async () => {
+		const res = await fetch("/api/auth/logout");
+	}
 
 
 
@@ -141,7 +115,7 @@ export const LeftMenu = ({children}: Props) => {
 			);
 		//console.log("response");
 		//console.log(response);
-	}, []);
+	}, [loggedIn]);
 
 
 
@@ -184,9 +158,8 @@ export const LeftMenu = ({children}: Props) => {
 											</Link>
 										</li>
 										<li>
-											<Link href="/logout" className="logout" onNavigate={() => {
-												setLoggedIn(false);
-		}}>
+											<Link href="/logout" className="logout" onNavigate={() => {logoutUser().finally(() => {
+												setLoggedIn(false);})}}>
 												<svg className="SVGLink" width="800px" height="800px" viewBox="0 0 70 70" fill="currentColor">
 													<path d="M62.666,32.316L57.758,21.53c-0.457-1.007-1.646-1.449-2.648-0.992c-1.006,0.457-1.45,1.644-0.992,2.648l3.365,7.397  H44.481c-1.104,0-2,0.896-2,2s0.896,2,2,2h13.69l-4.055,8.912c-0.458,1.004-0.014,2.191,0.992,2.648  c0.269,0.121,0.55,0.18,0.827,0.18c0.76,0,1.486-0.436,1.821-1.172l4.939-10.855c0.104-0.196,0.172-0.407,0.206-0.625  C62.988,33.207,62.901,32.726,62.666,32.316z"></path>
 													<path d="M51.583,47.577c-1.104,0-2,0.895-2,2v8.006h-11V15.269c0-1.722-0.81-3.25-2.445-3.795L24.536,7.583h25.047v9.994  c0,1.104,0.896,2,2,2s2-0.896,2-2v-12c0-1.104,0.003-1.994-1.102-1.994H12.609l-0.325-0.109c-0.413-0.138-0.694-0.205-1.119-0.205  c-0.829,0-1.94,0.258-2.63,0.755C7.492,4.776,6.583,5.983,6.583,7.269v47.572c0,1.721,1.393,3.25,3.026,3.795l24.146,8  c0.413,0.137,0.913,0.205,1.337,0.205c0.83,0,1.395-0.258,2.084-0.756c1.043-0.752,1.407-1.959,1.407-3.244v-1.258h13.898  c1.104,0,1.102-0.902,1.102-2.006v-10C53.583,48.472,52.688,47.577,51.583,47.577z M34.583,62.841l-24-8V7.583V7.504L10.8,7.345  l23.783,7.924V62.841z"></path>

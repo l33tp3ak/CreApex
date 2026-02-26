@@ -55,7 +55,7 @@ export async function POST(req: NextRequest) {
 
 	try {
 		newRequest = await prisma.request.create({
-			data: {userMessage, requestorID}
+			data: {userMessage, requestorID, status: "IN_REVIEW"}
 		});
 	} catch (e) {
 		console.log("An error has occured: " + e);

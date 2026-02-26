@@ -17,7 +17,7 @@ export async function POST(req: NextRequest) {
 	const file = formData.get("file") as File;
 	const arrayBuffer = await file.arrayBuffer();
 	const buffer = new Uint8Array(arrayBuffer);
-	const filePath = path.resolve('.', "public", 'uploads', `${file.name}`); // Saves to the `uploads` folder
+	const filePath = path.resolve('.', "public", 'uploads', "avatars",`${file.name}`); // Saves to the `uploads` folder
 
 	fs.writeFileSync(filePath, buffer);
 	NextResponse.json({message: `File uploaded successfully: ${file.name}`}, {status: 200});

@@ -27,7 +27,7 @@ export async function POST(req: NextRequest) {
 
 	try {
 		newTask = await prisma.task.create({
-			data: {woNumberID, selectedMaterial, selectedColour}
+			data: {woNumberID, selectedMaterial, selectedColour, status: "IN_REVIEW"}
 		});
 	} catch (e) {
 		console.log("An error has occured: " + e);

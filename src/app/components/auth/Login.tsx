@@ -3,6 +3,7 @@
 
 import {redirect, useRouter} from 'next/navigation';
 import {FormEvent, useState} from 'react';
+import {useAuth} from '../AuthContext';
 //import {useRouter} from 'next/router';
 
 export default function LoginPage() {
@@ -27,6 +28,7 @@ export default function LoginPage() {
 
 	const [userEmail, setUserEmail] = useState('');
 	const [userPassword, setUserPassword] = useState('');
+	const {role, setRole, loggedIn, setLoggedIn} = useAuth();
 
 
 
@@ -102,6 +104,7 @@ export default function LoginPage() {
 					*/
 					//THIS is the correct way to do a redirect in a client component:
 					router.push('/dashboard');
+					setLoggedIn()
 						/*
 							As this uses URLs, we can also exploit the APIs of the application.
 							This means that it is possible to send information for a GET request using the following technique:

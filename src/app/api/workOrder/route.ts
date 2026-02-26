@@ -11,7 +11,8 @@
 */
 import prisma from "@/lib/prisma";
 import {NextRequest, NextResponse} from "next/server";
-import {ITILTicketType} from "@/generated/prisma/client";
+import {ITILTicketType, ITILTicketStatus} from "@/generated/prisma/client";
+
 
 export async function GET() {
 	//Get all the data from the Note table in the database in the JSON format
@@ -34,7 +35,7 @@ export async function POST(req: NextRequest) {
 	let newWO;
 	try {
 		newWO = await prisma.workOrder.create({
-			data: {quantity, modelID, rqNumberID}
+			data: {quantity, modelID, rqNumberID, status: "IN_REVIEW"}
 		});
 	} catch (exception) {
 		return NextResponse.json({ message: `An error has occured: ${exception}` });

@@ -23,7 +23,7 @@ interface LoginBody {
 
 export async function POST(req: NextRequest) {
 	const {email, password} = await req.json();
-	
+
 
 	const res = await findUser(email);
 	const response = await res.json();
@@ -57,6 +57,7 @@ export async function POST(req: NextRequest) {
 	const loginResponse = NextResponse.json(
 		{
 			message: "User is logged in",
+			role: userData.role,
 			success: true
 		},
 		{status: 201});
@@ -71,6 +72,31 @@ export async function POST(req: NextRequest) {
 		path: '/',
 		maxAge: 60 * 60 * 24 * 7, // 7 days
 	});
+
+	let userToUpdate;
+
+	try {
+		userToUpdate = await prisma.user.update({
+			where: {user_ID: userData.user_ID},
+			data: {
+				stackAuthId,
+				firstName,
+				lastName,
+				avatar,
+				username,
+				email,
+				password,
+				lastLogin,
+				languageID,
+				defaultAddressID
+			}
+		});
+	} catch (e) {
+		console.log("An error has occured: " + e);
+		return NextResponse.json({message: `An error has occured: ${e}`});
+	}
+
+
 
 	return loginResponse;
 };
@@ -88,6 +114,7 @@ export async function GET() {
 
 	try {
 		const decoded = await verify(token, process.env.JWT_SECRET!);
+
 		return NextResponse.json({userData: decoded, message: "User is logged in", success: true}, {status: 201});
 	} catch {
 		return NextResponse.json({message: "Invalid token", success: false}, {status: 401});
