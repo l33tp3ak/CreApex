@@ -28,7 +28,7 @@ export default function DashboardPage() {
 	
 	return (
 		<>
-			<h1 className="center">Bienvenue sur le tableau de bord</h1>
+			<h1 className="center">Welcome to your Dashboard</h1>
 
 		</>
 	);

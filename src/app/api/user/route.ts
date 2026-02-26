@@ -15,6 +15,9 @@ import {Role} from "@/generated/prisma/client";
 import 'dotenv/config';
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
+import fs from 'fs';
+import {updateUserPFP} from "@/app/api/uploadFile/userAvatar/route";
+
 
 export async function GET() {
 	//Get all the data from the User table in the database
@@ -23,27 +26,19 @@ export async function GET() {
 }
 
 export async function POST(req: NextRequest) {
-	//Extract from the body of the request
-	const body = await req.json();
-	const {
-		stackAuthId,
-		firstName,
-		lastName,
-		avatar,
-		username,
-		password,
-		email,
-		lastLogin,
-		languageID,
-		defaultAddressID
-	} = body;
+	const formData = await req.formData();
 
-	/*
-	Check if the user has a specified role, just in case, and if it does not, assign the default role
-	if (!role) {
-		role = Role.USER;
-	}
-	 */
+	const firstName = formData.get('firstName') as string;
+	const lastName = formData.get('lastName') as string;
+	const avatarPath = formData.get('avatarPath') as string;
+	const username = formData.get('username') as string;
+	const email = formData.get('email') as string;
+	const password = formData.get('password') as string;
+
+	const avatar = formData.get("file") as File;
+
+
+
 
 	const existingUser = await prisma.user.findUnique({
 		where: {email}
@@ -52,24 +47,58 @@ export async function POST(req: NextRequest) {
 		return NextResponse.json({message: "User already exists"}, {status: 400});
 	}
 
+
+
+
 	// Encrypting the password before saving it to the database
 	const hashedPassword = await bcrypt.hash(password, 10);
 
-
 	const newUser = await prisma.user.create({
 		data: {
-			stackAuthId,
 			firstName,
 			lastName,
-			avatar,
+			avatar: avatarPath,
 			username,
 			password: hashedPassword,
-			email,
-			lastLogin,
-			languageID,
-			defaultAddressID
+			email
 		}
 	});
+	
+
+	console.log("newUser.user_ID");
+	console.log(newUser.user_ID);
+	let newAvatar;
+
+	if (avatar) {
+		const newAvatarFormData = new FormData;
+		newAvatarFormData.append('user_ID', newUser.user_ID);
+		newAvatarFormData.append('avatarPath', "");
+		newAvatarFormData.append('file', avatar);
+		
+		newAvatar = await updateUserPFP(newAvatarFormData);
+
+		newAvatar = await newAvatar.json();
+		if (newAvatar.newFilePath) {
+			newAvatar = newAvatar.newFilePath;
+			try {
+				const userToUpdate = await prisma.user.update({
+					where: {email},
+					data: {
+						avatar: newAvatar as string,
+					}
+				});
+			} catch (e) {
+				console.log("An error has occured: " + e);
+				return NextResponse.json({message: `An error has occured: ${e}`});
+			}
+
+		}
+
+
+	}
+
+
+
 
 	// G n r e r le token
 	const token = jwt.sign(
@@ -103,6 +132,8 @@ export async function POST(req: NextRequest) {
 
 
 	return loginResponse;
+
+
 }
 
 
@@ -168,9 +199,17 @@ export async function DELETE(req: NextRequest) {
 	let userToDelete;
 
 	try {
-		const userData = await findUser(user_ID)
-		
-		
+		const res = await findUser(user_ID);
+		const response = await res.json();
+		const {userData} = response;
+		const {avatar} = userData;
+
+		//Removes the user's avatar image, if it exists
+		if (avatar) {
+			fs.rmSync(avatar);
+		}
+
+
 		userToDelete = await prisma.user.delete({
 			where: {email}
 		});
@@ -212,7 +251,8 @@ export async function findUser(searchParam: string) {
 				where: {email: String(searchParam)}
 			});
 		}
-		console.log(userToFind);
+		//		console.log("userToFind");
+		//		console.log(userToFind);
 
 	} catch (e) {
 		console.log("An error has occured: " + e);

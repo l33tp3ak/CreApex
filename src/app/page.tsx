@@ -6,6 +6,7 @@ import {Menu} from "./components/Menu";
 import {useEffect, useState} from 'react';
 import Login from "./components/auth/Login";
 import {AuthProvider, useAuth} from "./components/AuthContext";
+import FileUpload from "./components/FileUpload";
 //filesystem
 //https://nodejs.org/api/fs.html
 //import fs from "fs";
@@ -38,11 +39,13 @@ export default function Home() {
 		try {
 			const res = await fetch(queryParam);
 			response = await res.json();
+			console.log("response");
 			console.log(response);
 			const {success} = response;
 
 			if (success) {
 				const {userData} = response;
+				console.log("userData");
 				console.log(userData);
 				return userData;
 			}
@@ -182,6 +185,11 @@ export default function Home() {
 				<br />
 				<br />
 				<Login />
+				<br />
+				<br />
+				<br />
+				<br />
+				<FileUpload />
 				<br />
 				<br />
 				<br />

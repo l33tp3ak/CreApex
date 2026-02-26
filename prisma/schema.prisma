@@ -69,6 +69,8 @@ enum Role {
 
 
 //Used for tax and payment purposes
+//On delete, cascade?
+//It's very possible that we may need the information for booking reasons, meaning we could get in legal trouble if we do not keep the information.
 model Address {
 	address_ID						String					@id @default(uuid())
 	streetNumber					Int
@@ -204,7 +206,7 @@ model Modele3D {
 	modele_3d_ID					String					@id @default(uuid())
 	name								String
 	path								String
-	netVolume						Float
+	netVolume						Float?
 	description						String?
 
 //Relations
@@ -244,9 +246,6 @@ model Modele3DImages {
 model Material {
 	material_ID						Int					@id @default(autoincrement())
 	name								String					@unique
-//PLA+ => blue
-//PLA+ => rouge
-//PLA+ => Orange
 	
 	createdAt						DateTime			@default(now())
 	updatedAt						DateTime			@default(now())

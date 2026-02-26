@@ -51,7 +51,8 @@ export async function GET(req: NextRequest) {
 				where: {email: String(searchParam)}
 			});
 		}
-		//console.log(userToFind);
+		console.log("userToFind");
+		console.log(userToFind);
 
 	} catch (e) {
 		console.log("An error has occured: " + e);

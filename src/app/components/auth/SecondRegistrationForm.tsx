@@ -8,9 +8,13 @@ import {useEffect, useState} from "react";
 import {User} from "@/generated/prisma/client";
 import {language as primaryLanguage} from "@/lib/language";
 import jwt from "jsonwebtoken";
+import {NextResponse} from "next/server";
+import {useAuth} from "../AuthContext";
 
 
 export default function SecondRegistrationForm() {
+	const {role, setRole, loggedIn, setLoggedIn} = useAuth();
+	
 	//const [stackUser, setStackUser] = useUser();
 	const [user, setUser] = useState<User[]>([]);
 	const [firstName, setFirstName] = useState("");
@@ -61,42 +65,55 @@ const fetchUsers = async () => {
 		let response;
 		let avatarPath;
 
-		const formData = new FormData();
+
+
+		const formData = new FormData;
+		formData.append('firstName', firstName);
+		formData.append('lastName', lastName);
+		formData.append('avatarPath', "");
+		formData.append('username', username);
+		formData.append('email', email);
+		formData.append('password', password);
+
+
+
+
+
+
 		if (avatar) {
 			formData.append('file', avatar);
-
-			avatarPath = await fetch(`/api/uploadFile/userAvatar/`, {
-				method: 'POST',
-				body: formData,
-			});
-			//console.log(avatarPath);
-
-			if (avatarPath.body) {
+			try {
+				avatarPath = await fetch("/api/user", {
+					method: "POST",
+					body: formData
+				});
+				console.log(avatarPath);
 				avatarPath = await avatarPath.json();
-				//console.log(avatarPath);
-				avatarPath = avatarPath.message;
+				console.log(avatarPath);
+
+				if (avatarPath.success) {
+					console.log(avatarPath);
+					console.log(avatarPath);
+					avatarPath = avatarPath.message;
+					
+					setLoggedIn(true);
+					return router.push('/dashboard');
+				}
+			} catch (e) {
+				console.log("An error has occured: " + e);
+				return NextResponse.json({message: `An error has occured: ${e}`});
 			}
 
+
+
 		}
-
-
-
-
-
 
 		const res = await fetch("/api/user", {
 			method: "POST",
 			headers: {
 				"Content-Type": "application/json"
 			},
-			body: JSON.stringify({
-				firstName,
-				lastName,
-				avatar: avatarPath,
-				username,
-				email,
-				password
-			})
+			body: formData
 		});
 		response = await res.json();
 		//console.log(response);
@@ -106,8 +123,11 @@ const fetchUsers = async () => {
 			//const {token} = response;
 			//console.log(userData);
 			//localStorage.setItem('token', token);
+			setLoggedIn(true);
 			return router.push('/dashboard');
 		}
+
+
 
 
 
@@ -165,6 +185,7 @@ const fetchUsers = async () => {
 					<div>
 						<label htmlFor="avatar">Avatar: </label>
 						<input
+							name="avatar"
 							id="avatar"
 							type='file'
 							accept="image/*"
