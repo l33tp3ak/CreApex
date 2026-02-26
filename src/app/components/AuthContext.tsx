@@ -51,17 +51,12 @@ export function AuthProvider({children}: Props) {
 // Custom hooks that will return Context
 // This allows to use the context in any children of the Parent component
 // It also forces the context to be used within the appropriate Parent component
-export function useAuth() {
-	try {
-		const context = React.useContext(AuthContext);
-		return context;
-	} catch (e) {
-		console.log(e);
-		throw new Error("useAuth must be used within a <Parent />");
-	}
-	/*
+export function useAuth(): AuthContextType {
+	const context = React.useContext(AuthContext);
+
 	if (!context) {
 		throw new Error("useAuth must be used within a <Parent />");
 	}
-	*/
+
+	return context;
 }

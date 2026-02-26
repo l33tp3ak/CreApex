@@ -22,5 +22,5 @@ export async function POST(req: NextRequest) {
 	fs.writeFileSync(filePath, buffer);
 	NextResponse.json({message: `File uploaded successfully: ${file.name}`}, {status: 200});
 
-	return NextResponse.json({message: `./public/uploads/${file.name}`}, {status: 200}); filePath;
+	return NextResponse.json({message: `./public/uploads/avatars/${file.name}`}, {status: 200}); filePath;
 }

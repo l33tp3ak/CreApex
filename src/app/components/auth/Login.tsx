@@ -104,7 +104,7 @@ export default function LoginPage() {
 					*/
 					//THIS is the correct way to do a redirect in a client component:
 					router.push('/dashboard');
-					setLoggedIn()
+					setLoggedIn(loginSuccessful);
 						/*
 							As this uses URLs, we can also exploit the APIs of the application.
 							This means that it is possible to send information for a GET request using the following technique:

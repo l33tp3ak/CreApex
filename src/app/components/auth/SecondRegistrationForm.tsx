@@ -65,7 +65,7 @@ const fetchUsers = async () => {
 		if (avatar) {
 			formData.append('file', avatar);
 
-			avatarPath = await fetch(`/api/uploadFile/`, {
+			avatarPath = await fetch(`/api/uploadFile/userAvatar/`, {
 				method: 'POST',
 				body: formData,
 			});
