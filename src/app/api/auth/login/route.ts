@@ -76,19 +76,12 @@ export async function POST(req: NextRequest) {
 	let userToUpdate;
 
 	try {
+		const jsDate = new Date();
+		const postgresTimestamp = jsDate.toISOString();
 		userToUpdate = await prisma.user.update({
 			where: {user_ID: userData.user_ID},
 			data: {
-				stackAuthId,
-				firstName,
-				lastName,
-				avatar,
-				username,
-				email,
-				password,
-				lastLogin,
-				languageID,
-				defaultAddressID
+				lastLogin: postgresTimestamp,
 			}
 		});
 	} catch (e) {
