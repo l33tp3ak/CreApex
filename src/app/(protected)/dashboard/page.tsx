@@ -14,7 +14,7 @@ export default function DashboardPage() {
 	const {role, setRole, loggedIn, setLoggedIn} = useAuth();
 
 
-
+	/*
 	const isUserLoggedIn = async () => {
 
 		try {
@@ -40,6 +40,7 @@ export default function DashboardPage() {
 		}
 	}
 	//console.log(role);
+	*/
 
 	useEffect(() => {
 		let userRole:Role | null;
@@ -69,7 +70,7 @@ export default function DashboardPage() {
 		//console.log("response");
 		//console.log(response);
 	}, []);
-	console.log(role);
+	//console.log(role);
 
 
 	if (role == Role.ADMIN) {

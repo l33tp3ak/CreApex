@@ -1,6 +1,7 @@
 
 
 'use client';
+import '@/app/assets/CSS/admin.css';
 
 
 export default function ITILMainPage() {
@@ -10,7 +11,15 @@ export default function ITILMainPage() {
 	return (
 		<>
 			<h1 className="center">ITSM</h1>
-			<div>
+			<div className="ITSM-Main">
+				<div className="ITSM-Main-Content">
+					<div className="ITSM-Labels center">Invoices</div>
+				</div>
+				
+				<div className="ITSM-Main-Content">
+					<div className="ITSM-Labels center">Requests</div>
+				</div>
+
 			</div>
 		</>
 	);

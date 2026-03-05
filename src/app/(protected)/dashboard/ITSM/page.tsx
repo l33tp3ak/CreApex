@@ -1,7 +1,7 @@
 
 "use client"
 
-import '@/app/assets/CSS/menu.css';
+import '@/app/assets/CSS/admin.css';
 //import {useLocation} from "react-router-dom";
 import Link from "next/link";
 import React, {act} from "react";
@@ -29,7 +29,7 @@ export default function ITSMPage() {
 	const {role, setRole, loggedIn, setLoggedIn} = useAuth();
 	const router = useRouter();
 
-
+	/*
 	const isUserLoggedIn = async () => {
 
 		try {
@@ -54,6 +54,7 @@ export default function ITSMPage() {
 			return e;
 		}
 	}
+	*/
 
 	useEffect(() => {
 		let userRole: Role | null;
@@ -78,6 +79,10 @@ export default function ITSMPage() {
 					setRole(userRole);
 
 				}
+				if (role == Role.USER || !userRole) {
+					console.log("You do not have authorization to view this page");
+					return router.push('/dashboard');
+				}
 
 			});
 		//console.log("response");
@@ -92,9 +97,6 @@ export default function ITSMPage() {
 				<ITILMainPage />
 			</>
 		);
-	} else {
-		console.log("You do not have authorization to view this page");
-		return router.push('/dashboard');
 	}
 
 }

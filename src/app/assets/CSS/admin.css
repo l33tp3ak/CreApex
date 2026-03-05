@@ -97,6 +97,31 @@ Click nbfs://nbhost/SystemFileSystem/Templates/ClientSide/css.css to edit this t
 }
 
 
+
+
+
+
+
+
+/*
+ITSM
+*/
+
+
+/*
+.ITSM-Labels {
+		display: inline-block;
+		
+}
+*/
+
+.ITSM-Main-Content {
+		display: inline-block;
+		width: 45%;
+		margin-left: auto;
+		margin-right: auto;
+}
+
 @media only screen and not (min-width: 992px)  {
 		.dashboard-Main {
 				display: inline-flex;
