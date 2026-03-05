@@ -93,7 +93,7 @@ export default function ITSMPage() {
 			</>
 		);
 	} else {
-		alert("You do not have authorization to view this page");
+		console.log("You do not have authorization to view this page");
 		return router.push('/dashboard');
 	}
 
