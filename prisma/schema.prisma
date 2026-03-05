@@ -374,6 +374,8 @@ User selects Canada, the Foreign Key corresponding to Canada is entered as the v
 	totalAfterTaxes				Decimal
 	reservationFee					Decimal
 	totalAfterFee					Decimal
+	createdAt						DateTime				@default(now())
+	updatedAt						DateTime				@updatedAt
 }
 
 
@@ -503,6 +505,8 @@ model Request {
 	requestorID						String?
 
 	status								ITILTicketStatus		@default(NEW)
+	createdAt						DateTime					@default(now())
+	updatedAt						DateTime					@updatedAt
 
 //1:1
 //In a one-to-one relation, the side of the relation without a foreign key MUST be optional
@@ -536,6 +540,8 @@ model WorkOrder {
 	rqNumberID						Int
 
 	status								ITILTicketStatus		@ default(NEW)
+	createdAt						DateTime					@default(now())
+	updatedAt						DateTime					@updatedAt
 
 //n:1
 	tasksBeingFulfilled				Task[]
@@ -559,4 +565,6 @@ model Task {
 	woNumberID					Int
 
 	status								ITILTicketStatus		@ default(NEW)
+	createdAt						DateTime					@default(now())
+	updatedAt						DateTime					@updatedAt
 }

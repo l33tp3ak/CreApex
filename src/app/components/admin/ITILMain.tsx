@@ -1,6 +1,6 @@
 
 
-
+'use client';
 
 
 export default function ITILMainPage() {
@@ -9,6 +9,7 @@ export default function ITILMainPage() {
 	// See: https://nextjs.org/docs/app/api-reference/file-conventions/loading
 	return (
 		<>
+			<h1 className="center">ITSM</h1>
 			<div>
 			</div>
 		</>

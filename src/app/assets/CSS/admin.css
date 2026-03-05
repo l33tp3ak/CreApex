@@ -25,8 +25,8 @@ Click nbfs://nbhost/SystemFileSystem/Templates/ClientSide/css.css to edit this t
 		display: flex;
 		justify-content: space-around;
 		flex-wrap:wrap;
-		min-height: 250px;
-		margin-bottom: 12vh;
+		min-height: 200px;
+		margin-bottom: 6vh;
 }
 
 .dashboard-Main-Btn {
@@ -34,14 +34,10 @@ Click nbfs://nbhost/SystemFileSystem/Templates/ClientSide/css.css to edit this t
 		display: block;
 		min-width: 100px;
 		min-height: 100px;
-		max-width: 250px;
-		max-height: 250px;
+		max-width: 200px;
+		max-height: 200px;
 		background-color: grey;
 		flex-grow: 1;
-}
-
-.dashboard-Main:last-child {
-		margin-bottom: 6vh;
 }
 
 .dashboard-Main-Btn-Link {

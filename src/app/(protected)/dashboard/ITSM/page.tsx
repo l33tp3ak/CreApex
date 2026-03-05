@@ -8,6 +8,8 @@ import React, {act} from "react";
 import {useEffect, useState, } from 'react';
 import {useRouter} from "next/navigation";
 import {useAuth} from '@/app/components/AuthContext';
+import {Role} from '@/generated/prisma/browser';
+import ITILMainPage from '@/app/components/admin/ITILMain';
 
 /*
 	* This allows us to put children elements inside of our prop, making it more modular and speeding up development time.
@@ -25,6 +27,7 @@ type Props = {
 //
 export default function ITSMPage() {
 	const {role, setRole, loggedIn, setLoggedIn} = useAuth();
+	const router = useRouter();
 
 
 	const isUserLoggedIn = async () => {
@@ -51,4 +54,47 @@ export default function ITSMPage() {
 			return e;
 		}
 	}
+
+	useEffect(() => {
+		let userRole: Role | null;
+		fetch("/api/auth/login")
+			.then(
+				res => res.json()
+					.then(response => {
+						//console.log("response");
+						//console.log(response);
+						const {success} = response;
+						setLoggedIn(success);
+
+						if (success) {
+
+							const {userData} = response;
+							userRole = userData.role;
+							setRole(userData.role);
+						}
+					})
+			).finally(() => {
+				if (userRole) {
+					setRole(userRole);
+
+				}
+
+			});
+		//console.log("response");
+		//console.log(response);
+	}, []);
+	//console.log("Unauthorized")
+	//console.log(role);
+
+	if (role == Role.ADMIN) {
+		return (
+			<>
+				<ITILMainPage />
+			</>
+		);
+	} else {
+		alert("You do not have authorization to view this page");
+		return router.push('/dashboard');
+	}
+
 }
