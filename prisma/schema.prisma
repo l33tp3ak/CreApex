@@ -85,8 +85,10 @@ model Address {
 
 //1:n
 //Province / State / Region of the address
-	region								ProvinceState		@relation(fields: [regionID], references: [region_ID], onUpdate: Cascade, onDelete: Cascade)
-	regionID							Int
+	//region								ProvinceState		@relation(fields: [regionID], references: [region_ID], onUpdate: Cascade, onDelete: Cascade)
+	region								ProvinceState?		@relation(fields: [regionID], references: [region_ID], onUpdate: Cascade, onDelete: SetNull)
+	//regionID							Int
+	regionID							Int?
 
 	defaultAddresses				User[]					@relation("UserDefaultAddress")
 
@@ -126,8 +128,8 @@ model Country {
 //Relations
 //1:n
 //Currency of the country
-	currency							Currency				@relation(fields: [currencyID], references: [currency_ID], onUpdate: Cascade, onDelete: Cascade)
-	currencyID						Int
+	currency							Currency?			@relation(fields: [currencyID], references: [currency_ID], onUpdate: Cascade, onDelete: SetNull)
+	currencyID						Int?
 
 //n:1
 	regions							ProvinceState[]

@@ -11,7 +11,6 @@ import {TopArrow} from "./components/TopArrow";
 //import {Contacts} from "./components/Contacts";
 import {Menu} from "./components/Menu";
 import {LeftMenu} from "./components/LeftMenu";
-import {Role} from "@/generated/prisma/client";
 //import UpWhiteArrowOcreCircle from "@/app/assets/images/UpWhiteArrowOcreCircle.png";
 import {AuthProvider, useAuth} from '@/app/components/AuthContext';
 
@@ -60,6 +59,16 @@ export default function RootLayout({
 	return (
 		<AuthProvider>
 			<html lang="en">
+				<head>
+					<title> CreApex </title>
+					
+					{/*<!-- Pour les accents francais -->*/}
+				<meta charSet="UTF-8" />
+
+				{/*<!-- Ensures the website works on different screen sizes by fitting it to the display  -->*/}
+				<meta name="viewport" content="width=device-width, initial-scale=1" />
+					
+				</head>
 				<body>
 					<div id="Home"></div>
 					<Menu>

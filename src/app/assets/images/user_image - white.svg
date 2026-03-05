@@ -4,7 +4,7 @@
 
 <svg xmlns="http://www.w3.org/2000/svg"
 		width="1.66667in" height="1.66667in"
-		viewBox="0 0 500 500">
+		viewBox="0 0 500 500"  fill="#ffffff">
 	<circle id="Head" r="125" cx="250" cy="125" fill="#ffffff" />
 	<circle id="Body" r="250" cx="250" cy="500" fill="#ffffff" />
 </svg>

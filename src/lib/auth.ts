@@ -10,9 +10,10 @@ import {NextRequest, NextResponse} from 'next/server';
 import {redirect} from 'next/navigation';
 
 
-export async function getCurrentUser() {
+export async function getCurrentUser(request: NextRequest) {
 	const cookieSession = await cookies();
-	const token = cookieSession.get('token')?.value
+	const cookieSessiontoken = await cookieSession.get('token')?.value;
+	const token = await request.cookies.get('token')?.value;
 	if (!token) {
 		return redirect('/login');
 	}

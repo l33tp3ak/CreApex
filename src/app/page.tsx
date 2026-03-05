@@ -195,7 +195,7 @@ export default function Home() {
 				<br />
 				<section id="appDevelopment" className="pageSection">
 					<h3>App Development</h3>
-					<img className="alignment" src="../images/Generic4.jpg" title="Generic" alt="Generic" />
+					<img className="alignment" src="../images/Blason_ville_ca_Quebec_(Quebec).svg" title="Generic" alt="Generic" />
 					<p>Here is where I can put in content about the Level 3 and Application Development.</p>
 				</section>
 				<br />
