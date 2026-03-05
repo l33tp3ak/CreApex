@@ -42,7 +42,7 @@ export default function DashboardPage() {
 	//console.log(role);
 
 	useEffect(() => {
-		let userRole;
+		let userRole:Role | null;
 		fetch("/api/auth/login")
 			.then(
 				res => res.json()
