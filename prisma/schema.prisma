@@ -45,7 +45,7 @@ model User {
 
 //1:n
 //Presently selected default address to use when doing an order
-	defaultAddress					Address?		@relation("UserDefaultAddress", fields: [defaultAddressID], references: [address_ID], onDelete: SetNull)
+	defaultAddress					Address?					@relation("UserDefaultAddress", fields: [defaultAddressID], references: [address_ID], onDelete: SetNull)
 	defaultAddressID				String?
 
 
@@ -74,8 +74,9 @@ enum Role {
 model Address {
 	address_ID						String					@id @default(uuid())
 	streetNumber					Int
-	streetName						String						
+	streetName						String	
 	postalCode						String
+	cityName							String
 	
 //Relations
 //1:n

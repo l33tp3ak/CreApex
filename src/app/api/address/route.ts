@@ -21,13 +21,14 @@ export async function GET() {
 export async function POST(req: NextRequest) {
 	//Extract from the body of the request
 	const body = await req.json();
-	const {streetNumber, streetName, postalCode, countryID, regionID} = body;
+	const {streetNumber, streetName, postalCode, cityName, countryID, regionID} = body;
 
 	const newAddress = await prisma.address.create({
 		data: {
 			streetNumber,
 			streetName,
 			postalCode,
+			cityName,
 			countryID,
 			regionID
 		}
@@ -44,7 +45,7 @@ export async function POST(req: NextRequest) {
 export async function PATCH(req: NextRequest) {
 	//Extract from the body of the request
 	const body = await req.json();
-	const {address_ID, streetNumber, streetName, postalCode, countryID, regionID} = body;
+	const {address_ID, streetNumber, streetName, postalCode, cityName, countryID, regionID} = body;
 
 	let addressToUpdate;
 
@@ -55,6 +56,7 @@ export async function PATCH(req: NextRequest) {
 				streetNumber,
 				streetName,
 				postalCode,
+				cityName,
 				countryID,
 				regionID
 			}

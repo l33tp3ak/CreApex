@@ -26,8 +26,7 @@ export default function SecondRegistrationForm() {
 	const [password, setPassword] = useState("");
 
 
-	/*	  * Unfortunately, Stack Auth refuses to redirect properly.	  * No Time, shelved.	  * 		const stackAuthId = stackUser.id;		const avatar = stackUser.profileImageUrl;		const username = stackUser.displayName;		const email = stackUser.primaryEmail;
-		if (!stackUser) {			redirect("/register");			return null;		}		*/
+
 
 
 

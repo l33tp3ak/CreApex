@@ -18,13 +18,16 @@ export default function DashboardPage() {
 	const isUserLoggedIn = async () => {
 
 		try {
+			//Check if the user is logged in
 			const res = await fetch("/api/auth/login");
 			const response = await res.json();
 			//console.log(response);
 			const {success} = response;
 			//loggedIn = success;
+			//Set the value of whether the user is logged in to true or false depending on the result
 			setLoggedIn(success)
-
+			
+			//If the user is logged in, change the value of the role to correspond to their role
 			let responseRole;
 			if (success) {
 				const {userData} = response;
