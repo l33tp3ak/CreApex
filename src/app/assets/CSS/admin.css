@@ -78,6 +78,10 @@ Click nbfs://nbhost/SystemFileSystem/Templates/ClientSide/css.css to edit this t
 		margin-top: 6%;
 }
 
+#Add {
+		color: rgba(255, 255, 255, 0.6);
+}
+
 .dashboard-Main-Btn-Link #Invoice {
 		margin-left: 20%;
 		margin-right: 20%;

@@ -81,7 +81,7 @@ model Address {
 //Relations
 //1:n
 //Country of the address
-	addressCountry					Country				@relation(fields: [countryID], references: [country_ID], onUpdate: Cascade, onDelete: Cascade)
+	addressCountry					Country				@relation(fields: [countryID], references: [country_ID], onUpdate: Cascade, onDelete: Restrict)
 	countryID						Int
 
 //1:n
@@ -91,14 +91,14 @@ model Address {
 	//regionID							Int
 	regionID							Int?
 
+//1:n
+//Default address of the user
 	defaultAddresses				User[]					@relation("UserDefaultAddress")
 
 //m:n
 //Address book containing which user has which addresses
 	addressBook						AddressBook[]
 
-//1:n
-//Default address of the user
 
 
 //1:n
@@ -145,7 +145,7 @@ model ProvinceState {
 
 //Relations
 //1:n
-	country							Country				@relation(fields: [countryID], references: [country_ID], onUpdate: Cascade, onDelete: Cascade)
+	country							Country				@relation(fields: [countryID], references: [country_ID], onUpdate: Cascade, onDelete: Restrict)
 	countryID						Int
 
 //n:1
@@ -216,7 +216,7 @@ model Modele3D {
 //1:n
 //User who uploaded the model
 //This is not required as the model may be uploaded at checkout by a user without an account.
-	uploader							User?					@relation(fields: [uploaderID], references: [user_ID])
+	uploader							User?					@relation(fields: [uploaderID], references: [user_ID], onDelete: SetNull)
 	uploaderID						String?
 
 //Relations
@@ -291,7 +291,7 @@ model MaterialColour {
 	colourID							Int
 
 	quantityAvailable				Float					//Each colour of each material has it's own quantity available, which represents in the inventory the amount available in the defined weightUnit
-	priceByWeight					Decimal
+	priceByWeight					@db.Decimal(10, 4)
 
 
 //Forces the combination to be unique
@@ -321,6 +321,14 @@ enum Weight {
 
 //----------------------------------------------------------------------------------------------------------------
 /*
+The invoice should contain its own address for billing and shipping for bookkeeping purposes
+This is to prevent cascading deletes in case of data deletion (i.e: user deletes their accounts, required by certain jurisdictions)
+In addition, it may be required by certain jurisdiction to have the information on the receipt/invoice
+*/
+
+
+
+/*
 For an invoice, we need to calculate:
 (volume/weight of the model   /   weight unit of the Material)   *   priceByWeight + taxes  + 30% RESERVATION FEE
 
@@ -330,9 +338,9 @@ If they ARE logged in, then we can extract the information that way
 */
 model Invoice {
 	invoice_ID_string				ITILTicketType		@default(INV)
-	invoice_ID_number			Int						@default(autoincrement()) @unique
+	invoice_ID_number			Int						 @id @default(autoincrement())
 //Defines the ID to be multiple fields, making it possible to have an autoincrement with a specific string
-	@@id(name: "inv_ref", [invoice_ID_string, invoice_ID_number])
+//	@@id(name: "inv_ref", [invoice_ID_string, invoice_ID_number])
 
 	
 //Relations
@@ -342,11 +350,13 @@ Although this is a 1:1 relationship, it is a FULL junction, I think
 Through it, we get the User who made the commission, if any
 Through the user we can get their address, through the address, the country
 */
-	purchase							Request					@relation(fields: [purchaseRqStringID, purchaseRqNumberID], references: [request_ID_string, request_ID_number])
-	purchaseRqStringID			ITILTicketType		@default(REQ)
-	purchaseRqNumberID			Int
+//	purchase							Request					@relation(fields: [purchaseRqStringID, purchaseRqNumberID], references: [request_ID_string, request_ID_number])
+//	purchaseRqStringID			ITILTicketType		@default(REQ)
+
+	purchase							Request					@relation(fields: [purchaseRqNumberID], references: [request_ID_number])
+	purchaseRqNumberID			Int						@unique
 //A one-to-one relationship REQUIRES all fields be unique, thus the following is MANDATORY!!!!!!!!
-	@@unique([purchaseRqStringID, purchaseRqNumberID])
+//	@@unique([purchaseRqStringID, purchaseRqNumberID])
 
 
 //1:n
@@ -370,11 +380,11 @@ User selects Canada, the Foreign Key corresponding to Canada is entered as the v
 	shippingAddressID				String?
 	
 
-	totalBeforeTaxes				Decimal
-	taxes								Decimal
-	totalAfterTaxes				Decimal
-	reservationFee					Decimal
-	totalAfterFee					Decimal
+	totalBeforeTaxes				@db.Decimal(10, 2)
+	taxes								@db.Decimal(10, 2)
+	totalAfterTaxes				@db.Decimal(10, 2)
+	reservationFee					@db.Decimal(10, 2)
+	totalAfterFee					@db.Decimal(10, 2)
 	createdAt						DateTime				@default(now())
 	updatedAt						DateTime				@updatedAt
 }
@@ -459,6 +469,8 @@ enum ITILTicketStatus {
 }
 
 
+
+
 /*
 Quand on crée la requête dans le backend, il faut combiner un chiffre avec le String identifiant les requete (REQ)
 
@@ -486,9 +498,9 @@ prisma.request.create(
 */
 model Request {
 	request_ID_string				ITILTicketType		@default(REQ)
-	request_ID_number			Int						@default(autoincrement()) @unique
+	request_ID_number			Int						 @id @default(autoincrement())
 //Defines the ID to be multiple fields, making it possible to have an autoincrement with a specific string
-	@@id(name: "req_ref", [request_ID_string, request_ID_number])
+//	@@id(name: "req_ref", [request_ID_string, request_ID_number])
 
 //Sent on checkout, not on the cart
 	userMessage						String?
@@ -522,9 +534,9 @@ Primary Key is composed of an autoincremented number and the string representing
 */
 model WorkOrder {
 	work_order_ID_string		ITILTicketType		@default(WO)
-	work_order_ID_number		Int						@default(autoincrement()) @unique
+	work_order_ID_number		Int						 @id @default(autoincrement())
 //Defines the ID to be multiple fields, making it possible to have an autoincrement with a specific string
-	@@id(name: "wo_ref", [work_order_ID_string, work_order_ID_number])
+//	@@id(name: "wo_ref", [work_order_ID_string, work_order_ID_number])
 
 	
 	quantity							Int
@@ -534,13 +546,16 @@ model WorkOrder {
 	orderedModel					Modele3D				@relation(fields: [modelID], references: [modele_3d_ID])
 	modelID							String
 
-//1:n
+
 //Multi-Field Foreign Key to the parent Request
-	parentRequest					Request					@relation(fields: [rqStringID, rqNumberID], references: [request_ID_string, request_ID_number])
-	rqStringID						ITILTicketType		@default(REQ)
+//	parentRequest					Request					@relation(fields: [rqStringID, rqNumberID], references: [request_ID_string, request_ID_number])
+//	rqStringID						ITILTicketType		@default(REQ)
+
+//1:n
+	parentRequest					Request					@relation(fields: [rqNumberID], references: [request_ID_number])
 	rqNumberID						Int
 
-	status								ITILTicketStatus		@ default(NEW)
+	status								ITILTicketStatus		@default(NEW)
 	createdAt						DateTime					@default(now())
 	updatedAt						DateTime					@updatedAt
 
@@ -551,9 +566,9 @@ model WorkOrder {
 
 model Task {
 	task_ID_string					ITILTicketType		@default(TAS)
-	task_ID_number				Int						@default(autoincrement()) @unique
+	task_ID_number				Int						@id @default(autoincrement())
 //Defines the ID to be multiple fields, making it possible to have an autoincrement with a specific string
-	@@id(name: "tas_ref", [task_ID_string, task_ID_number])
+//	@@id(name: "tas_ref", [task_ID_string, task_ID_number])
 
 	
 //Relations
@@ -561,11 +576,12 @@ model Task {
 	selectedMaterial				Int
 	selectedColour					Int
 
-	parentWorkOrder				WorkOrder				@relation(fields: [woStringID, woNumberID], references: [work_order_ID_string, work_order_ID_number])
-	woStringID						ITILTicketType		@default(WO)
+//	parentWorkOrder				WorkOrder				@relation(fields: [woStringID, woNumberID], references: [work_order_ID_string, work_order_ID_number])
+//	woStringID						ITILTicketType		@default(WO)
+	parentWorkOrder				WorkOrder				@relation(fields: [woNumberID], references: [work_order_ID_number])
 	woNumberID					Int
 
-	status								ITILTicketStatus		@ default(NEW)
+	status								ITILTicketStatus		@default(NEW)
 	createdAt						DateTime					@default(now())
 	updatedAt						DateTime					@updatedAt
 }

@@ -1,5 +1,7 @@
 
 
+
+
 import prisma from "@/lib/prisma";
 import type {Request, Response} from "express";
 import {NextRequest, NextResponse} from "next/server";
@@ -13,7 +15,8 @@ export async function GET(req: NextRequest) {
 	*/
 	//console.log(req);
 	//console.log(req.nextUrl.searchParams);
-	const searchParam = req.nextUrl.searchParams.get("searchParam");
+	const request_ID_string = req.nextUrl.searchParams.get("ID_string");
+	const request_ID_number = req.nextUrl.searchParams.get("ID_number");
 
 	//console.log(searchParam);
 
@@ -31,40 +34,28 @@ export async function GET(req: NextRequest) {
 	const {searchParam} = body;
 	*/
 	//const {searchParam} = req.params;
-	//
-	//
-	//const {searchParams} = new URL(req.url);
 
 
-	let userToFind;
+	let requestToFind;
 	//Get the data from the User table in the database for our user
-	try {
-		userToFind = await prisma.user.findUnique({
-			where: {user_ID: String(searchParam)}
-		});
-
-		if (!userToFind) {
-			userToFind = await prisma.user.findUnique({
-				where: {stackAuthId: String(searchParam)}
+	if (request_ID_string && request_ID_number) {
+		try {
+			requestToFind = await prisma.request.findUnique({
+				where: {request_ID_number: Number(request_ID_number)}
 			});
-		}
+			//console.log("requestToFind");
+			//console.log(requestToFind);
 
-		if (!userToFind) {
-			userToFind = await prisma.user.findUnique({
-				where: {email: String(searchParam)}
-			});
+		} catch (e) {
+			console.log("An error has occured: " + e);
+			return NextResponse.json({message: `An error has occured: ${e}`, success: false}, {status: 401});
 		}
-		console.log("userToFind");
-		console.log(userToFind);
-
-	} catch (e) {
-		console.log("An error has occured: " + e);
-		return NextResponse.json({message: `An error has occured: ${e}`, success: false}, {status: 401});
-	}
-	
-	if (!userToFind) {
-		return NextResponse.json({message: `User does not exist`, success: false}, {status: 404});
 	}
 
-	return NextResponse.json({userData: userToFind, success: true}, {status: 201});
+
+	if (!requestToFind) {
+		return NextResponse.json({message: `Request does not exist`, success: false}, {status: 404});
+	}
+
+	return NextResponse.json({requestData: requestToFind, success: true}, {status: 201});
 }
